@@ -1,0 +1,34 @@
+{
+  "name": "wgo",
+  "authors": [
+    "Cooper Mayne <coopermayne@gmail.com>"
+  ],
+  "description": "easy to use sgf display/editor",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "go",
+    "weiqi",
+    "baduk"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "homepage": "https://github.com/coopermayne/wgo",
+  "_release": "d893d2c0a4",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d893d2c0a41d34d4dc00f39033b06cf5b308aba5"
+  },
+  "_source": "git://github.com/coopermayne/wgo.git",
+  "_target": "*",
+  "_originalSource": "wgo"
+}

@@ -1,0 +1,34 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>surrounding game</title>
+  <script src="bower_components/angular/angular.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/wgo/wgo.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/wgo/wgo.player.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/raphael/raphael-min.js" type="text/javascript" charset="utf-8"></script>
+
+
+  <link rel="stylesheet" href="bower_components/wgo/wgo.player.css" type="text/css" media="all" />
+
+  <script src="script.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+</head>
+
+<body ng-app="surroundingGame">
+<div ng-controller="main">
+  <script type="text/ng-template" id="stone.html">
+<div class="boardContainer">
+  <div  ng-repeat='val in game.position.schema track by $index'
+        ng-click="beenClicked($index)"
+        class="square {{determineBackground($index, val)}}"
+        style="{{setPosition($index)}}" >
+
+  </div> 
+  &nbsp;
+</div>
+  </script>
+
+  <board game='game'></board>
+</div>
+</body>
+</html>

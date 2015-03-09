@@ -1,0 +1,25 @@
+{
+  "name": "wgo",
+  "version": "0.0.0",
+  "authors": [
+    "Cooper Mayne <coopermayne@gmail.com>"
+  ],
+  "description": "easy to use sgf display/editor",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "go",
+    "weiqi",
+    "baduk"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
