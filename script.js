@@ -1,127 +1,198 @@
-var app = angular.module("surroundingGame", []);
+Cooper = {}
+Cooper.helpers = {
+  idxToCoord: function(index, size) {
+    var x = Math.floor(index/size);
+    var y = index%size;
+    return {
+      x: x,
+      y: y
+    }
+  }
+}
 
-var MakingTheBoard = {};
+var app = angular.module("surroundingGame", []);
 
 app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 
+  var idxToCoord = Cooper.helpers.idxToCoord;
 
-  scope.game = new WGo.Game(13);
-  scope.game.firstPosition();
-
-}]);
-
-app.directive("board", function() {
-  return {
-    restrict: "E",
-    scope: {
-      game: "=",
-    },
-    controller: function($scope, $element) {
-
-      $scope.determineBackground = function(index, val) {
-        //return file name for cell
-        var size = $scope.game.size;
-        var coord = $scope.indexToCoordinates(index,size)
-
-        //Stones 
-        if (val==1) { return "blackStone" }
-        if (val==-1) { return "whiteStone" } 
+  var play_to_maximize_liberties = function(board, game, black_group) {
+    //find your group -- recursive function
+    var brothers = []
+    var find_brothers = function(brothers, x, y, color) {
+      //ask you neighbors if they're your brother --
+      //up
+      if (game.position.get(x, y-1) == color) {
+        
       }
+      find_brothers(brothers, x, y-1)
+      //right
+      find_brothers(brothers, x+1, y)
+      //down
+      find_brothers(brothers, x, y+1)
+      //left
+      find_brothers(brothers, x-1, y)
 
-      $scope.setPosition = function(index) {
-        //return css style string
-        var b = document.getElementsByClassName('boardContainer')[0]
-        var total_width = b.clientWidth;
-        var cell_width = total_width/$scope.game.size;
-        var size = $scope.game.size;
+      
+    }
+    find_brothers(brothers, black_group.x, black_group.y, black_group.color)
 
-        coord = $scope.indexToCoordinates(index,size)
+    //look at possible extensions of my group
+    //take the one which gives most liberties
+  }
 
-        pos_x = coord.x*cell_width
-        pos_y = coord.y*cell_width
+  var setUpPosition = function(board, schema) {
+    board.removeAllObjects();
+    for (var i = 0, len = schema.length; i < len; i++) {
+      if (schema[i] == 1) {
+        board.addObject({
+          x: idxToCoord(i, board.size).x,
+          y: idxToCoord(i, board.size).y,
+          c: WGo.B
+        })
+      } else if (schema[i]==-1){
+        board.addObject({
+          x: idxToCoord(i, board.size).x,
+          y: idxToCoord(i, board.size).y,
+          c: WGo.W
+        })
+      } else {
 
-        string = "top: " + pos_y + "px;" + "left: " +  pos_x + "px;";
-        string += "width: " + cell_width+ "px;" + "height: "+ cell_width + "px;";
-        string += "background-size: " + cell_width+  "px;";
-
-        return string;
       }
-
-      $scope.indexToCoordinates = function(index, size) {
-        var x = Math.floor(index/size);
-        var y = index%size;
-        return {
-          x: x,
-          y: y
-        }
-      }
-      $scope.beenClicked = function(index) {
-        //try to play a move with current color at that spot...
-        coordinates = $scope.indexToCoordinates(index, $scope.game.size)
-
-        $scope.game.play(coordinates.x,coordinates.y);
-      }
-    },
-
-    templateUrl: 'stone.html',
-
-    link: function(scope, element, attrs) {
-
-      var makeBoard = function(scope, config) {
-        if (typeof(config) != 'object') { var config = {} }
-
-        var config = {
-          stroke_width: config.stroke_width || 1,
-          stroke_color: config.stroke_color || 'black'
-        }
-
-        var line_config = {
-          "stroke-width": config.stroke_width,
-          "stroke": config.stroke_color
-        }
-
-        var el = document.getElementsByClassName('boardContainer')[0]
-        var total_width = el.clientWidth;
-        var interval = total_width/scope.game.size;
-        var paper = new Raphael(el, total_width, total_width);
-
-        for (var i = 0, len = scope.game.size; i < len; i++) {
-          //verticle lines
-          var start = {
-            x: i*interval + interval/2,
-            y: interval/2
-          };
-          var end = {
-            y: total_width - interval/2
-          };
-          var line = paper.path( ["M", start.x, start.y, "V", end.y ] );
-          line.attr(line_config)
-
-          //horizontal lines
-          var start = {
-            y: i*interval + interval/2,
-            x: interval/2
-          };
-          var end = {
-            x: total_width - interval/2
-          };
-          var line = paper.path( ["M", start.x, start.y, "H", end.x ] );
-          line.attr(line_config)
-        }
-      }
-
-      makeBoard(scope, {})
     }
   }
-});
+  var setUpProblem = function(board, scope) {
+    //set up the problem
+    var game = scope.game;
+    var current_lvl = scope.current_lvl;
+    var listener;
 
-app.directive("hover", function() {
-  return function(scope, element) {
-    element.bind("mouseenter", function() {
-      element.addClass('ghost');
-    });
-    element.bind("mouseleave", function() {
-      element.removeClass('ghost');
+    var levelSetUp = [
+      //0
+      [{x: 3, y: 3, color: WGo.B}],
+      //1
+      [
+        {x: 3, y: 3, color: WGo.B},
+        {x: 3, y: 2, color: WGo.B}
+      ],
+      //2
+      [
+        {x: 3, y: 3, color: WGo.B},
+        {x: 3, y: 2, color: WGo.B},
+        {x: 4, y:2, color: WGo.B}
+      ],
+      //3
+      [
+        {x: 3, y: 3, color: WGo.B},
+        {x: 3, y: 2, color: WGo.B},
+      ],
+      //4
+      [
+        {x: 1, y: 3, color: WGo.W},
+        {x: 1, y: 4, color: WGo.W},
+        {x: 2, y:5, color: WGo.W},
+        {x: 2, y: 4, color: WGo.B},
+      ],
+    ];
+    var win_crit = [1,2,3,2]
+
+    game.firstPosition()
+    angular.forEach(levelSetUp[current_lvl], function(stone) {
+      //sync game position with pattern for problem
+      game.play(stone.x,stone.y,stone.color)
     })
+    //populate board with pattern for problem
+    setUpPosition(board, game.position.schema)
+
+//--------------------------------------------------
+//--------------------------------------------------
+//--------------------------------------------------
+
+    var listener_for_static_problem = function(x, y) {
+      //handle invalid moves
+      if (!scope.game.isValid(x,y, WGo.W)) {return false}
+
+      //remove any captured stones from the board
+      var captures = scope.game.play(x,y, WGo.W);
+      angular.forEach(captures, function(value) {
+        board.removeObject(value);
+      });
+
+      //add the valid move
+      board.addObject({
+        x: x,
+        y: y,
+        c: WGo.W
+      });
+
+      //check if you won
+      if (game.getCaptureCount(WGo.W) == win_crit[current_lvl]) {
+        board.removeEventListener("click", listener);
+        scope.$apply( function() { scope.current_lvl +=1 })
+        //run the problem function again with new problem index
+        setUpProblem(board, scope)
+      }
+    }
+//--------------------------------------------------
+//--------------------------------------------------
+//--------------------------------------------------
+
+    var listener_for_dynamic_problem = function(x, y) {
+      //handle invalid moves
+      if (!scope.game.isValid(x,y, WGo.W)) {return false}
+
+      //remove any captured stones from the board
+      var captures = scope.game.play(x,y, WGo.W);
+      angular.forEach(captures, function(value) {
+        board.removeObject(value);
+      });
+
+      //add the valid move
+      board.addObject({
+        x: x,
+        y: y,
+        c: WGo.W
+      });
+
+      //check if white captured black
+      if (game.getCaptureCount(WGo.W) > 0) {
+        board.removeEventListener("click", listener);
+        scope.$apply( function() { scope.current_lvl +=1 })
+        //run the problem function again with new problem index
+        setUpProblem(board, scope)
+      }
+
+      //if not -- handle black response
+      var black_group = {x:2, y:4, color: WGo.B}
+      play_to_maximize_liberties(board, game, black_group)
+    }
+//--------------------------------------------------
+//--------------------------------------------------
+//--------------------------------------------------
+
+    if (current_lvl < 4) {
+      listener = listener_for_static_problem;
+    } else {
+      listener = listener_for_dynamic_problem;
+    }
+
+    //add event listeners and gameplay logic
+    board.addEventListener("click", listener);
   }
-})
+
+  //START
+  scope.game = new WGo.Game(7);
+
+  var board = new WGo.Board(document.getElementById("board"), {
+    width: 600,
+    stoneHandler: WGo.Board.drawHandlers.MONO,
+    size: scope.game.size,
+    background: "",
+  });
+
+  //first problem
+  scope.current_lvl = 4;
+
+  setUpProblem(board, scope)
+  
+}]);
