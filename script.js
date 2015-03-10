@@ -240,7 +240,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
   });
 
   //first problem
-  scope.current_lvl = 5;
+  scope.current_lvl = 0;
 
   setUpProblem(board, scope)
   
