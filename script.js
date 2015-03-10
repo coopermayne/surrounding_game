@@ -94,32 +94,45 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 
     var levelSetUp = [
       //0 capture 1
-      [{x: 3, y: 3, color: WGo.B}],
+      [{x: 9, y: 9, color: WGo.B}],
       //1 capture 2
       [
-        {x: 3, y: 3, color: WGo.B},
-        {x: 3, y: 2, color: WGo.B}
+        {x: 9, y: 10, color: WGo.B},
+        {x: 9, y: 9, color: WGo.B}
       ],
       //2 capture 3
       [
-        {x: 3, y: 3, color: WGo.B},
-        {x: 3, y: 2, color: WGo.B},
-        {x: 4, y:2, color: WGo.B}
+        {x: 9, y: 10, color: WGo.B},
+        {x: 9, y: 9, color: WGo.B},
+        {x: 10, y: 9, color: WGo.B}
       ],
       //3 ladder
       [
-        {x: 1, y: 3, color: WGo.W},
-        {x: 1, y: 4, color: WGo.W},
-        {x: 2, y:5, color: WGo.W},
-        {x: 2, y: 4, color: WGo.B},
+        {x: 7, y: 10, color: WGo.W},
+        {x: 7, y: 11, color: WGo.W},
+        {x: 8, y:12, color: WGo.W},
+        {x: 8, y: 11, color: WGo.B},
+        {x: 12, y:7, color: WGo.W},
       ],
       //4 net
       [
-        {x: 1, y: 3, color: WGo.W},
-        {x: 1, y: 4, color: WGo.W},
-        {x: 2, y:5, color: WGo.W},
-        {x: 3, y:5, color: WGo.W},
-        {x: 2, y: 4, color: WGo.B},
+        {x: 7, y: 10, color: WGo.W},
+        {x: 7, y: 11, color: WGo.W},
+        {x: 8, y:12, color: WGo.W},
+        {x: 9, y:12, color: WGo.W},
+        {x: 8, y: 11, color: WGo.B},
+        {x: 12, y: 7, color: WGo.B},
+      ],
+      //5 capture black with eye
+      [
+        {x: 9, y: 10, color: WGo.B},
+        {x: 8, y: 10, color: WGo.B},
+        {x: 10, y: 10, color: WGo.B},
+        {x: 9, y: 8, color: WGo.B},
+        {x: 8, y: 8, color: WGo.B},
+        {x: 10, y: 8, color: WGo.B},
+        {x: 8, y: 9, color: WGo.B},
+        {x: 10, y: 9, color: WGo.B},
       ],
     ];
     var win_crit = [1,2,3,2]
@@ -190,7 +203,8 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
         //run the problem function again with new problem index
         setUpProblem(board, scope)
       } else {
-        var black_group = {x:2, y:4, color: 1}
+        //TODO - make this dynamic -- this is ugly! 
+        var black_group = {x:8, y:11, color: 1}
         play_to_maximize_liberties(board, game, black_group)
       }
 
@@ -202,6 +216,8 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 
     if (current_lvl < 3) {
       listener = listener_for_static_problem;
+    } else if (current_lvl>4) {  
+      listener = listener_for_static_problem;
     } else {
       listener = listener_for_dynamic_problem;
     }
@@ -211,17 +227,20 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
   }
 
   //START
-  scope.game = new WGo.Game(7);
+  scope.game = new WGo.Game(19);
 
   var board = new WGo.Board(document.getElementById("board"), {
     width: 600,
     stoneHandler: WGo.Board.drawHandlers.MONO,
     size: scope.game.size,
     background: "",
+    section: {
+      top: 4, right: 4, bottom: 4, left: 4
+    },
   });
 
   //first problem
-  scope.current_lvl = 0;
+  scope.current_lvl = 5;
 
   setUpProblem(board, scope)
   
