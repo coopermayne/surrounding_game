@@ -17,28 +17,53 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
   var idxToCoord = Cooper.helpers.idxToCoord;
 
   var play_to_maximize_liberties = function(board, game, black_group) {
-    //find your group -- recursive function
-    var brothers = []
-    var find_brothers = function(brothers, x, y, color) {
-      //ask you neighbors if they're your brother --
-      //up
-      if (game.position.get(x, y-1) == color) {
-        
+    console.log('black playing...');
+    //find your group and group liberties-- recursive function
+    var examine_group = function(tested, liberties, x, y, color) {
+      if (game.position.get(x,y) == 0) {
+        //if no stone there add to group liberties and return
+        liberties.push({x: x, y: y});
+        return
       }
-      find_brothers(brothers, x, y-1)
+      if (game.position.get(x,y) == -color) {
+        //if opposite color just end the recurse
+        return
+      }
+      //if already tested -- end recursion
+      if (tested.get(x,y) !== 0) {
+        return
+      }
+
+      //add me to group
+      tested.set(x,y,true);
+
+      //check neighbors
+      //up
+      examine_group(tested, liberties, x, y-1, color)
       //right
-      find_brothers(brothers, x+1, y)
+      examine_group(tested, liberties, x+1, y, color)
       //down
-      find_brothers(brothers, x, y+1)
+      examine_group(tested, liberties, x, y+1, color)
       //left
-      find_brothers(brothers, x-1, y)
-
-      
+      examine_group(tested, liberties, x-1, y, color)
     }
-    find_brothers(brothers, black_group.x, black_group.y, black_group.color)
 
-    //look at possible extensions of my group
-    //take the one which gives most liberties
+    var testSchema = new WGo.Position(game.size)
+    var libs = []
+    examine_group(testSchema, libs, black_group.x, black_group.y, black_group.color)
+    console.log(libs);
+    console.log(testSchema);
+
+    //play from group
+    var lx = libs[0].x
+    var ly = libs[0].y
+    game.play(lx, ly, WGo.B)
+    board.addObject({
+      x: lx,
+      y: ly,
+      c: WGo.B
+    });
+    //TODO take the one which gives most liberties
   }
 
   var setUpPosition = function(board, schema) {
@@ -68,29 +93,32 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
     var listener;
 
     var levelSetUp = [
-      //0
+      //0 capture 1
       [{x: 3, y: 3, color: WGo.B}],
-      //1
+      //1 capture 2
       [
         {x: 3, y: 3, color: WGo.B},
         {x: 3, y: 2, color: WGo.B}
       ],
-      //2
+      //2 capture 3
       [
         {x: 3, y: 3, color: WGo.B},
         {x: 3, y: 2, color: WGo.B},
         {x: 4, y:2, color: WGo.B}
       ],
-      //3
-      [
-        {x: 3, y: 3, color: WGo.B},
-        {x: 3, y: 2, color: WGo.B},
-      ],
-      //4
+      //3 ladder
       [
         {x: 1, y: 3, color: WGo.W},
         {x: 1, y: 4, color: WGo.W},
         {x: 2, y:5, color: WGo.W},
+        {x: 2, y: 4, color: WGo.B},
+      ],
+      //4 net
+      [
+        {x: 1, y: 3, color: WGo.W},
+        {x: 1, y: 4, color: WGo.W},
+        {x: 2, y:5, color: WGo.W},
+        {x: 3, y:5, color: WGo.W},
         {x: 2, y: 4, color: WGo.B},
       ],
     ];
@@ -156,21 +184,23 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 
       //check if white captured black
       if (game.getCaptureCount(WGo.W) > 0) {
+        console.log('win');
         board.removeEventListener("click", listener);
         scope.$apply( function() { scope.current_lvl +=1 })
         //run the problem function again with new problem index
         setUpProblem(board, scope)
+      } else {
+        var black_group = {x:2, y:4, color: 1}
+        play_to_maximize_liberties(board, game, black_group)
       }
 
       //if not -- handle black response
-      var black_group = {x:2, y:4, color: WGo.B}
-      play_to_maximize_liberties(board, game, black_group)
     }
 //--------------------------------------------------
 //--------------------------------------------------
 //--------------------------------------------------
 
-    if (current_lvl < 4) {
+    if (current_lvl < 3) {
       listener = listener_for_static_problem;
     } else {
       listener = listener_for_dynamic_problem;
@@ -191,7 +221,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
   });
 
   //first problem
-  scope.current_lvl = 4;
+  scope.current_lvl = 0;
 
   setUpProblem(board, scope)
   
