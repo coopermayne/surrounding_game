@@ -16,8 +16,13 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 
   var idxToCoord = Cooper.helpers.idxToCoord;
 
+  scope.restart_lvl = function() {
+    //clear board and start over
+    setUpProblem(board, scope)
+  }
+
   var play_to_maximize_liberties = function(board, game, black_group) {
-    console.log('black playing...');
+
     //find your group and group liberties-- recursive function
     var examine_group = function(tested, liberties, x, y, color) {
       if (game.position.get(x,y) == 0) {
@@ -51,10 +56,8 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
     var testSchema = new WGo.Position(game.size)
     var libs = []
     examine_group(testSchema, libs, black_group.x, black_group.y, black_group.color)
-    console.log(libs);
-    console.log(testSchema);
 
-    //play from group
+    //play for maximum liberty extension
     var lx = libs[0].x
     var ly = libs[0].y
     game.play(lx, ly, WGo.B)
@@ -63,7 +66,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
       y: ly,
       c: WGo.B
     });
-    //TODO take the one which gives most liberties
+    //TODO play the move that gives most liberties
   }
 
   var setUpPosition = function(board, schema) {
@@ -91,6 +94,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
     var game = scope.game;
     var current_lvl = scope.current_lvl;
     var listener;
+    scope.computer_turn = false;
 
     var levelSetUp = [
       //0 capture 1
@@ -171,6 +175,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
         board.removeEventListener("click", listener);
         scope.$apply( function() { scope.current_lvl +=1 })
         //run the problem function again with new problem index
+        alert('yup \nnext up lvl ' + scope.current_lvl);
         setUpProblem(board, scope)
       }
     }
@@ -179,10 +184,13 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 //--------------------------------------------------
 
     var listener_for_dynamic_problem = function(x, y) {
+      //do nothing if black hasn't responded...
+      if (scope.computer_turn) { return false };
+
       //handle invalid moves
       if (!scope.game.isValid(x,y, WGo.W)) {return false}
 
-      //remove any captured stones from the board
+      //play and remove any captured stones from the board
       var captures = scope.game.play(x,y, WGo.W);
       angular.forEach(captures, function(value) {
         board.removeObject(value);
@@ -194,18 +202,32 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
         y: y,
         c: WGo.W
       });
+      
+      //tell scope it is blacks turn
+      scope.$apply( function() { scope.computer_turn = true })
 
       //check if white captured black
       if (game.getCaptureCount(WGo.W) > 0) {
-        console.log('win');
+        //if capture play wins -- set to next lvl
         board.removeEventListener("click", listener);
         scope.$apply( function() { scope.current_lvl +=1 })
+
+        //pause before setting up new problem
         //run the problem function again with new problem index
+        alert('yup \nnext up lvl ' + scope.current_lvl);
         setUpProblem(board, scope)
       } else {
+        //if no capture -- black plays back
         //TODO - make this dynamic -- this is ugly! 
         var black_group = {x:8, y:11, color: 1}
-        play_to_maximize_liberties(board, game, black_group)
+        //wait to "think"
+        timeout( function() {
+          //play move
+          play_to_maximize_liberties(board, game, black_group)
+
+          //tell scope you have played
+          scope.$apply( function() { scope.computer_turn = false })
+        }, 400)
       }
 
       //if not -- handle black response
@@ -240,8 +262,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
   });
 
   //first problem
-  scope.current_lvl = 0;
-
+  scope.current_lvl = 4;
   setUpProblem(board, scope)
   
 }]);
