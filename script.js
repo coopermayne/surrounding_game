@@ -172,11 +172,13 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 
       //check if you won
       if (game.getCaptureCount(WGo.W) == win_crit[current_lvl]) {
+        //no more playing!
         board.removeEventListener("click", listener);
-        scope.$apply( function() { scope.current_lvl +=1 })
         //run the problem function again with new problem index
-        alert('yup \nnext up lvl ' + scope.current_lvl);
-        setUpProblem(board, scope)
+        timeout( function() {
+          scope.$apply( function() { scope.current_lvl +=1 })
+          setUpProblem(board, scope)
+        }, 1500)
       }
     }
 //--------------------------------------------------
@@ -262,7 +264,11 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
   });
 
   //first problem
+<<<<<<< HEAD
   scope.current_lvl = 4;
+=======
+  scope.current_lvl = 0;
+>>>>>>> master
   setUpProblem(board, scope)
   
 }]);
