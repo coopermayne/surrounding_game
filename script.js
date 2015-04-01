@@ -178,7 +178,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
         timeout( function() {
           scope.$apply( function() { scope.current_lvl +=1 })
           setUpProblem(board, scope)
-        }, 1500)
+        }, 1000)
       }
     }
 //--------------------------------------------------
