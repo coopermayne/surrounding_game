@@ -212,12 +212,13 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
       if (game.getCaptureCount(WGo.W) > 0) {
         //if capture play wins -- set to next lvl
         board.removeEventListener("click", listener);
-        scope.$apply( function() { scope.current_lvl +=1 })
 
         //pause before setting up new problem
         //run the problem function again with new problem index
-        alert('yup \nnext up lvl ' + scope.current_lvl);
-        setUpProblem(board, scope)
+        timeout( function() {
+          scope.$apply( function() { scope.current_lvl +=1 })
+          setUpProblem(board, scope)
+        }, 1000)
       } else {
         //if no capture -- black plays back
         //TODO - make this dynamic -- this is ugly! 
