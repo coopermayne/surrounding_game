@@ -10,6 +10,9 @@
 
   <link rel="stylesheet" href="bower_components/wgo/wgo.player.css" type="text/css" media="all" />
 
+  <link rel="stylesheet" href="bower_components/skeleton/css/normalize.css" type="text/css">
+  <link rel="stylesheet" href="bower_components/skeleton/css/skeleton.css" type="text/css">
+
   <script src="script.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="style.css" type="text/css" media="all" />
 
@@ -18,27 +21,40 @@
 <body ng-app="surroundingGame">
 
 <div ng-controller="main">
-  <h1>Level {{current_lvl}}</h1>
+  <div class="status_bar">
+
+    <span class="level">LVL {{current_lvl}}</span>
+    <img class="restart" src="svg/spinner11.svg" ng-click="restart_lvl()"/>
 
   </div>
-
-  <script type="text/ng-template" id="stone.html">
-    <div class="boardContainer">
-    <div  ng-repeat='val in game.position.schema track by $index'
-          ng-click="beenClicked($index)"
-          class="square {{determineBackground($index, val)}}"
-          style="{{setPosition($index)}}" >
-  </script>
-
-
-
-  <!-- Dropdown menu for selecting tool -->
-  <div id="board">
-    <!-- board will go here -->
 </div>
+
+
+
+
+<div id="board"> </div>
 
 
 
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--<script type="text/ng-template" id="stone.html">-->
+    <!--<div class="boardContainer">-->
+    <!--<div  ng-repeat='val in game.position.schema track by $index'-->
+          <!--ng-click="beenClicked($index)"-->
+          <!--class="square {{determineBackground($index, val)}}"-->
+          <!--style="{{setPosition($index)}}" >-->
+  <!--</script>-->
