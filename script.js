@@ -264,11 +264,7 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
   });
 
   //first problem
-<<<<<<< HEAD
-  scope.current_lvl = 4;
-=======
   scope.current_lvl = 0;
->>>>>>> master
   setUpProblem(board, scope)
   
 }]);
