@@ -15,6 +15,10 @@ var app = angular.module("surroundingGame", []);
 app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
 
   var idxToCoord = Cooper.helpers.idxToCoord;
+  scope.lvls = 10;
+  scope.getNumber = function(num) {
+    return new Array(num);
+  }
 
   scope.restart_lvl = function() {
     //clear board and start over
@@ -170,8 +174,13 @@ app.controller('main', ['$scope', '$timeout', function(scope, timeout) {
         c: WGo.W
       });
 
+      //console.log('caps: ' + game.getCaptureCount(WGo.W));
+      //console.log('wincrit:' + win_crit[current_lvl]);
+      //console.log('currentlvl:' + current_lvl);
+
       //check if you won
       if (game.getCaptureCount(WGo.W) == win_crit[current_lvl]) {
+        console.log('win');
         //no more playing!
         board.removeEventListener("click", listener);
         //run the problem function again with new problem index
