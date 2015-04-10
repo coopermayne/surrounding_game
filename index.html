@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="bower_components/wgo/wgo.player.css" type="text/css" media="all" />
 
   <script src="script.js" type="text/javascript" charset="utf-8"></script>
+  <script src="game.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="style.css" type="text/css" media="all" />
 
 </head>
@@ -18,41 +19,15 @@
 <body ng-app="surroundingGame">
 
 <div ng-controller="main">
-
-
   <div class="status_bar">
-    <div class="circle" ng-class="{complete: current_lvl>$index, incomplete: current_lvl<=$index}" ng-repeat="i in getNumber(lvls) track by $index">
+    <div class="circle" ng-class="{complete: game.current_lvl>$index, incomplete: game.current_lvl<=$index}" ng-repeat="i in getNumber(game.levels.length) track by $index">
     </div>
-    <img class="restart" src="svg/spinner11.svg" ng-click="restart_lvl()"/>
+    <img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
   </div>
-</div>
-
-
-
 
 <div id="board"> </div>
 
-
-
+</div>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-  <!--<script type="text/ng-template" id="stone.html">-->
-    <!--<div class="boardContainer">-->
-    <!--<div  ng-repeat='val in game.position.schema track by $index'-->
-          <!--ng-click="beenClicked($index)"-->
-          <!--class="square {{determineBackground($index, val)}}"-->
-          <!--style="{{setPosition($index)}}" >-->
-  <!--</script>-->
