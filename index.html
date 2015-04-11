@@ -5,7 +5,8 @@
   <script src="bower_components/angular/angular.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="bower_components/wgo/wgo.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="bower_components/wgo/wgo.player.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="bower_components/raphael/raphael-min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/jquery.transit/jquery.transit.js" type="text/javascript" charset="utf-8"></script>
 
 
   <link rel="stylesheet" href="bower_components/wgo/wgo.player.css" type="text/css" media="all" />
@@ -13,20 +14,23 @@
   <script src="script.js" type="text/javascript" charset="utf-8"></script>
   <script src="game.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="style.css" type="text/css" media="all" />
-
 </head>
 
 <body ng-app="surroundingGame">
 
-<div ng-controller="main">
+<div class='container' ng-controller="main">
+
   <div class="status_bar">
-    <div class="circle" ng-class="{complete: game.current_lvl>$index, incomplete: game.current_lvl<=$index}" ng-repeat="i in getNumber(game.levels.length) track by $index">
-    </div>
-    <img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
+    <h2>Level: {{game.current_lvl}}</h1>
   </div>
 
-<div id="board"> </div>
 
+  <div class="viewport">
+    <div id="testy" class="port">&nbsp</div>
+    <div id="board"> </div>
+  </div>
+
+  <img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
 </div>
 
 </body>
