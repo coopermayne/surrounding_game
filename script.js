@@ -17,7 +17,7 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
   var w = $('.port').width()
   var margin = (w/2)-px;
   console.log(margin);
-  $("#board").animate({ 
+  $("#board").css({ 
     marginLeft: margin
   }, 500)
 

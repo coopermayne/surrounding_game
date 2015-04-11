@@ -1,6 +1,6 @@
 body {
   background: white;
-  margin: 0;
+  margin-top: 10px;
 }
 
 .container {
@@ -12,6 +12,7 @@ body {
   width: 100%;
   height: 50px;
   text-align: center;
+  font-family: sans-serif, sans-serif;
 }
 
 .wgo-board {
@@ -37,7 +38,10 @@ body {
 }
 
 #restart_button{
-  margin: 20 350;
+  display: block;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto
 }
 
 /*disable selecting*/
