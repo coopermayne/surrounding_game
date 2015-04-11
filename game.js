@@ -1,5 +1,4 @@
 app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
-
   var Game = function(config) {
     //instantiate a new game
     console.log('game instantiated');
@@ -91,7 +90,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
         id:5,
         type: 'static',
         description: 'capture group with one eye',
-        target_group: {x:9, y:5},
+        target_group: {x:9, y:6},
         init_moves: [
           {x: 9, y: 6, color: WGo.B},
           {x: 8, y: 6, color: WGo.B},
@@ -111,13 +110,40 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
   Game.prototype.shiftLevels = function() {
     //moves the problems over
+    var shift = 9
     angular.forEach(this.levels, function(value, key) {
-      value.target_group.x += key * 10
+      value.target_group.x += key * shift
+      value.target_group.y += key * shift
       angular.forEach(value.init_moves, function(stone, k) {
-        //sync game position with pattern for problem
-        stone.x += 10*key;
+        stone.x += shift*key;
+        stone.y += shift*key;
       })
     })
+  }
+
+  Game.prototype.getProblemCenter = function() {
+    var stones = this.getCurrentLevel().init_moves;
+    //return average x,y coord for points in problem
+    var res = {}
+    res.x = {min: null, max: null}
+    res.y = {min: null, max: null}
+    angular.forEach(stones, function(stone, k) {
+      res.x.max = res.x.max||stone.x
+      res.x.min = res.x.min||stone.x
+      if (stone.x<res.x.min) { res.x.min = stone.x }
+      if (stone.x>res.x.max) { res.x.max = stone.x }
+      res.y.max = res.y.max||stone.y
+      res.y.min = res.y.min||stone.y
+      if (stone.y<res.y.min) { res.y.min = stone.y }
+      if (stone.y>res.y.max) { res.y.max = stone.y }
+    });
+
+    var rx = (res.x.min+res.x.max)/2;
+    var ry = (res.y.min+res.y.max)/2;
+    var px = this.board.getX(rx);
+    var py = this.board.getY(ry);
+
+    return {x:px, y:py};
   }
 
   Game.prototype.helpers = {
@@ -323,7 +349,6 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     var self = this;
 
     angular.forEach(this.move_storage, function(value, k) {
-      console.log(value);
       self.game.removeStone(value.x, value.y)
     })
 

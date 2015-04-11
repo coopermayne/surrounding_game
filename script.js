@@ -11,29 +11,32 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
   scope.game.setUpProblems();
   scope.game.setUpListener();
 
-  //for testing purposes only
-  var problem_center = scope.game.getCurrentLevel().target_group.x;
-  var px = scope.game.board.getX(problem_center);
+  //initial centering
+  var center = scope.game.getProblemCenter();
   var w = $('.port').width()
-  var margin = (w/2)-px;
-  console.log(margin);
+  var h = $('.port').height()
+  var margin_l = (w/2)-center.x;
+  var margin_t = (h/2)-center.y;
   $("#board").css({ 
-    marginLeft: margin
-  }, 500)
+    marginLeft: margin_l,
+    marginTop: margin_t
+  })
 
   scope.$on('win', function(event, args) {
     timeout( function() {
       scope.game.nextProblem();
-    }, 1000)
+
+      var center = scope.game.getProblemCenter();
+      var w = $('.port').width()
+      var h = $('.port').height()
+      var margin_l = (w/2)-center.x;
+      var margin_t = (h/2)-center.y;
+      $("#board").animate({ 
+        marginLeft: margin_l,
+        marginTop: margin_t
+      }, 1000)
+    }, 1500)
     scope.$digest();
-    var problem_center = scope.game.getCurrentLevel().target_group.x;
-    var px = scope.game.board.getX(problem_center);
-    var w = $('.port').width()
-    var margin = (w/2)-px;
-    console.log(margin);
-    $("#board").animate({ 
-      marginLeft: margin
-    });
 
 
   });
@@ -41,7 +44,7 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
   scope.$on('ai_turn', function(event, args) {
     timeout( function() {
       scope.game.aiRespond();
-    }, 100)
+    }, 600)
   })
 
   //helper functions
