@@ -3,7 +3,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 0;
+    this.current_lvl = 3;
     this.move_storage = [];
 
     //make a new game object
@@ -14,12 +14,6 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
       width: config.width,
       stoneHandler: WGo.Board.drawHandlers.MONO,
       size: this.game.size,
-      section: {
-        top: 1,
-        left: 1,
-        right: 1,
-        bottom: 1
-      },
       background: "",
 
     });
@@ -112,11 +106,12 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //moves the problems over
     var shift = 7
     angular.forEach(this.levels, function(value, key) {
+      var direction = ((key)%2)
       value.target_group.x += key * shift
-      value.target_group.y += key * shift
+      value.target_group.y += direction * shift
       angular.forEach(value.init_moves, function(stone, k) {
-        stone.x += shift*key;
-        stone.y += shift*key;
+        stone.x += key * shift;
+        stone.y += direction * shift;
       })
     })
   }
@@ -292,17 +287,38 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
     var testSchema = new WGo.Position(this.game.size)
     var libs = []
-
     var t = this.getCurrentLevel().target_group;
-
     var black_group = {x:t.x, y:t.y, color: 1}
-    examine_group(testSchema, libs, black_group.x, black_group.y, black_group.color)
+
+    examine_group(testSchema,
+                  libs,
+                  black_group.x,
+                  black_group.y,
+                  black_group.color)
+
+    //find the best liberty to play on...
+    var potential_moves = [];
+    angular.forEach(libs, function(lib) {
+      //play here and examine group... record how many libs you have...
+      self.game.play(lib.x, lib.y, WGo.B);
+      var libs_n = []
+      var testSchema_n = new WGo.Position(self.game.size)
+      examine_group(testSchema_n,
+                    libs_n,
+                    black_group.x,
+                    black_group.y,
+                    black_group.color)
+      potential_moves.push({move: lib, libs: libs_n.length});
+      self.game.removeStone(lib.x, lib.y);
+    });
+    potential_moves = _.sortBy(potential_moves, 'libs');
+    potential_moves.reverse();
 
     //TODO don't play self atari
 
     //play for maximum liberty extension
-    var lx = libs[0].x
-    var ly = libs[0].y
+    var lx = potential_moves[0].move.x
+    var ly = potential_moves[0].move.y
     this.game.play(lx, ly, WGo.B)
     this.board.addObject({
       x: lx,
