@@ -3,7 +3,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 3;
+    this.current_lvl = 0;
     this.move_storage = [];
 
     //make a new game object
