@@ -3,7 +3,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 0;
+    this.current_lvl = 3;
     this.move_storage = [];
 
     //make a new game object
@@ -69,7 +69,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
           {x: 7, y: 7, color: WGo.W},
           {x: 8, y:8, color: WGo.W},
           {x: 8, y: 7, color: WGo.B},
-          {x: 12, y:3, color: WGo.W},
+          {x: 11, y:4, color: WGo.W},
         ]
       },
       {
@@ -83,7 +83,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
           {x: 8, y:8, color: WGo.W},
           {x: 9, y:8, color: WGo.W},
           {x: 8, y: 7, color: WGo.B},
-          {x: 12, y: 3, color: WGo.B},
+          {x: 10, y: 5, color: WGo.B},
         ]
       },
       {
@@ -110,7 +110,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
   Game.prototype.shiftLevels = function() {
     //moves the problems over
-    var shift = 9
+    var shift = 7
     angular.forEach(this.levels, function(value, key) {
       value.target_group.x += key * shift
       value.target_group.y += key * shift
