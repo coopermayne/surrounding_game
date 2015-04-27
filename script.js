@@ -8,6 +8,7 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
     width: 3300,
   });
   scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
+  scope.current_lvl = scope.game.current_lvl;
 
 
   scope.game.setUpProblems();
@@ -28,6 +29,7 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
     timeout( function() {
       scope.game.nextProblem();
       scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
+      scope.current_lvl = scope.game.current_lvl;
 
       var center = scope.game.getProblemCenter();
       var w = $('.port').width()
