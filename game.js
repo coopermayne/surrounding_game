@@ -11,6 +11,8 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //draw the board
     this.board = new WGo.Board(config.element, {
       width: config.width,
+      stoneSize: 1,
+      shadowSize: 0.4,
       stoneHandler: WGo.Board.drawHandlers.MONO,
       size: this.game.size,
       background: "",
