@@ -18,6 +18,11 @@
 </head>
 
 <body ng-app="surroundingGame" ng-controller="main">
+
+<div id="portal" ng-show="current_lvl==10">
+  <h2>SOME KIND OF PORTAL</h2>
+</div>
+
 <div class="progress_cont">
   <div ng-style="{'width': varvar}" class='progress'> &nbsp; </div>
 </div>
@@ -34,8 +39,15 @@
     <div id="board"> </div>
   </div>
 
+
   <img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
 </div>
 
 </body>
+
+<script type="text/ng-template" id="templateId">
+    <h1>Template heading</h1>
+    <p>Content goes here</p>
+</script>
+
 </html>

@@ -196,46 +196,78 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
           {x: 8, y: 5, color: WGo.W},
         ]
       },
-      //{
-        //id:9,
-        //type: 'dynamic',
-        //description: 'live by playing the vital point',
-        //target_group: {x:9, y:6},
-        //vital_point: {x:8, y:8},
-        //init_moves: [
-          //{x: 6, y: 10, color: WGo.B},
-          //{x: 7, y: 10, color: WGo.B},
-          //{x: 8, y: 10, color: WGo.B},
-          //{x: 9, y: 10, color: WGo.B},
+      {
+        id:9,
+        type: 'dynamic',
+        description: 'live by playing the vital point',
+        target_group: {x:7, y:5},
+        vital_point: {x:8, y:8},
+        init_moves: [
+          {x: 5, y: 4, color: WGo.W},
+          {x: 6, y: 4, color: WGo.W},
+          {x: 7, y: 4, color: WGo.W},
+          {x: 8, y: 4, color: WGo.W},
+          {x: 9, y: 4, color: WGo.W},
+          {x: 10, y: 4, color: WGo.W},
 
-          //{x: 5, y: 9, color: WGo.B},
-          //{x: 6, y: 9, color: WGo.W},
-          //{x: 7, y: 9, color: WGo.W},
-          //{x: 8, y: 9, color: WGo.W},
-          //{x: 9, y: 9, color: WGo.W},
-          //{x: 10, y: 9, color: WGo.B},
+          {x: 5, y: 5, color: WGo.W},
+          {x: 6, y: 5, color: WGo.B},
+          {x: 7, y: 5, color: WGo.B},
+          {x: 8, y: 5, color: WGo.B},
+          {x: 9, y: 5, color: WGo.B},
+          {x: 10, y: 5, color: WGo.W},
+          {x: 11, y: 5, color: WGo.W},
 
-          //{x: 5, y: 8, color: WGo.B},
-          //{x: 6, y: 8, color: WGo.W},
-          //{x: 9, y: 8, color: WGo.W},
-          //{x: 10, y: 8, color: WGo.B},
+          {x: 4, y: 6, color: WGo.W},
+          {x: 5, y: 6, color: WGo.B},
+          {x: 6, y: 6, color: WGo.B},
+          {x: 7, y: 6, color: WGo.W},
+          {x: 8, y: 6, color: WGo.W},
+          {x: 9, y: 6, color: WGo.B},
+          {x: 10, y: 6, color: WGo.B},
+          {x: 12, y: 6, color: WGo.W},
 
-          //{x: 5, y: 7, color: WGo.B},
-          //{x: 6, y: 7, color: WGo.W},
-          //{x: 7, y: 7, color: WGo.W},
-          //{x: 7, y: 7, color: WGo.W},
-          //{x: 9, y: 7, color: WGo.W},
-          //{x: 10, y: 7, color: WGo.B},
+          {x: 4, y: 7, color: WGo.W},
+          {x: 5, y: 7, color: WGo.B},
+          {x: 6, y: 7, color: WGo.W},
+          {x: 7, y: 7, color: WGo.W},
+          {x: 7, y: 7, color: WGo.W},
+          {x: 9, y: 7, color: WGo.W},
+          {x: 10, y: 7, color: WGo.B},
+          {x: 12, y: 7, color: WGo.W},
 
-          //{x: 6, y: 6, color: WGo.B},
-          //{x: 7, y: 6, color: WGo.W},
-          //{x: 8, y: 6, color: WGo.W},
-          //{x: 9, y: 6, color: WGo.B},
+          {x: 4, y: 8, color: WGo.W},
+          {x: 5, y: 8, color: WGo.B},
+          {x: 6, y: 8, color: WGo.W},
+          {x: 9, y: 8, color: WGo.W},
+          {x: 10, y: 8, color: WGo.B},
+          {x: 12, y: 8, color: WGo.W},
 
-          //{x: 7, y: 5, color: WGo.B},
-          //{x: 8, y: 5, color: WGo.B},
-        //]
-      //}
+          {x: 4, y: 9, color: WGo.W},
+          {x: 5, y: 9, color: WGo.B},
+          {x: 6, y: 9, color: WGo.B},
+          {x: 7, y: 9, color: WGo.W},
+          {x: 8, y: 9, color: WGo.W},
+          {x: 9, y: 9, color: WGo.W},
+          {x: 10, y: 9, color: WGo.B},
+          {x: 12, y: 9, color: WGo.W},
+
+          {x: 5, y: 10, color: WGo.W},
+          {x: 6, y: 10, color: WGo.B},
+          {x: 7, y: 10, color: WGo.B},
+          {x: 8, y: 10, color: WGo.B},
+          {x: 9, y: 10, color: WGo.B},
+          {x: 10, y: 10, color: WGo.B},
+          {x: 11, y: 10, color: WGo.W},
+
+          {x: 5, y: 11, color: WGo.W},
+          {x: 6, y: 11, color: WGo.W},
+          {x: 7, y: 11, color: WGo.W},
+          {x: 8, y: 11, color: WGo.W},
+          {x: 9, y: 11, color: WGo.W},
+          {x: 10, y: 11, color: WGo.W},
+        ]
+      }
     ];
 
     //shift lvl over 10 places for each lvl
@@ -371,7 +403,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
       rootScope.$broadcast('win');
       return;
     }
-    
+
     if (this.getCurrentLevel().type == 'dynamic') {
       //if its a problem that needs and answer...
       //prevent further moves and tell scope whats happening 
@@ -433,12 +465,26 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //make a smart move and put event listener back on
 
     if (this.getCurrentLevel().vital_point) {
-      console.log('playing vital point');
       var cl = this.getCurrentLevel();
-      console.log(cl.vital_point);
-      this.game.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
-      this.setUpPosition();
+      
+      if (this.game.isValid(cl.vital_point.x, cl.vital_point.y, WGo.B)) {
+      //if vital point hasn't been played play it...
+        console.log('playing vital point');
+        this.game.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
+      } else {
+        //if it has been... and its problem 9 -- capture white group
+        if (cl.id == 9) {
+          console.log('keep capturing');
+          if (this.game.isValid(cl.vital_point.x, cl.vital_point.y-1, WGo.B)) {
+            this.game.play(cl.vital_point.x, cl.vital_point.y-1, WGo.B);
+          } else if (this.game.isValid(cl.vital_point.x-1, cl.vital_point.y, WGo.B)) {
+            this.game.play(cl.vital_point.x-1, cl.vital_point.y, WGo.B);
+          }
 
+        }
+      }
+
+      this.setUpPosition();
       //reattach listener
       this.board.addEventListener('click', this.board._listener);
 

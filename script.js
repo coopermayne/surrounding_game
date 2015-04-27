@@ -42,8 +42,6 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
       }, 1000)
     }, 1500)
     scope.$digest();
-
-
   });
 
   scope.$on('ai_turn', function(event, args) {
