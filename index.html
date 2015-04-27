@@ -17,9 +17,12 @@
   <link rel="stylesheet" href="style.css" type="text/css" media="all" />
 </head>
 
-<body ng-app="surroundingGame">
+<body ng-app="surroundingGame" ng-controller="main">
+<div class="progress_cont">
+  <div ng-style="{'width': varvar}" class='progress'> &nbsp; </div>
+</div>
 
-<div class='container' ng-controller="main">
+<div class='container'>
 
   <div class="status_bar">
     <h2>Level: {{game.current_lvl}}</h1>

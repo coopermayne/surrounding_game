@@ -3,11 +3,10 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 3;
-    this.move_storage = [];
+    this.current_lvl = 0;
 
     //make a new game object
-    this.game = new WGo.Game(70);
+    this.game = new WGo.Game(80);
 
     //draw the board
     this.board = new WGo.Board(config.element, {
@@ -96,6 +95,147 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
           {x: 10, y: 5, color: WGo.B},
         ]
       },
+      {
+        id:6,
+        type: 'static',
+        description: 'capture group with big eye',
+        target_group: {x:9, y:6},
+        init_moves: [
+          //black stones
+          {x: 8, y: 6, color: WGo.B},
+          {x: 9, y: 6, color: WGo.B},
+          {x: 10, y: 6, color: WGo.B},
+          {x: 11, y: 6, color: WGo.B},
+          {x: 8, y: 4, color: WGo.B},
+          {x: 9, y: 4, color: WGo.B},
+          {x: 10, y: 4, color: WGo.B},
+          {x: 11, y: 4, color: WGo.B},
+          {x: 8, y: 5, color: WGo.B},
+          {x: 11, y: 5, color: WGo.B},
+
+          //white stones
+          {x: 12, y: 4, color: WGo.W},
+          {x: 12, y: 5, color: WGo.W},
+          {x: 12, y: 6, color: WGo.W},
+          {x: 7, y: 4, color: WGo.W},
+          {x: 7, y: 5, color: WGo.W},
+          {x: 7, y: 6, color: WGo.W},
+
+          {x: 8, y: 7, color: WGo.W},
+          {x: 9, y: 7, color: WGo.W},
+          {x: 10, y: 7, color: WGo.W},
+          {x: 11, y: 7, color: WGo.W},
+
+          {x: 8, y: 3, color: WGo.W},
+          {x: 9, y: 3, color: WGo.W},
+          {x: 10, y: 3, color: WGo.W},
+          {x: 11, y: 3, color: WGo.W},
+        ]
+      },
+      {
+        id:7,
+        type: 'dynamic',
+        description: 'snapback',
+        target_group: {x:9, y:7},
+        init_moves: [
+          //white moves
+          {x: 8, y: 6, color: WGo.W},
+          {x: 9, y: 6, color: WGo.W},
+          {x: 6, y: 7, color: WGo.W},
+          {x: 7, y: 7, color: WGo.W},
+          {x: 10, y: 7, color: WGo.W},
+          {x: 10, y: 8, color: WGo.W},
+          {x: 9, y: 9, color: WGo.W},
+
+          //black moves 
+          {x: 9, y: 7, color: WGo.B},
+          {x: 8, y: 7, color: WGo.B},
+          {x: 7, y: 8, color: WGo.B},
+          {x: 7, y: 9, color: WGo.B},
+          {x: 8, y: 9, color: WGo.B},
+          {x: 8, y: 10, color: WGo.B},
+        ]
+      },
+      {
+        id:8,
+        type: 'dynamic',
+        description: 'kill by playing vital point',
+        target_group: {x:6, y:9},
+        vital_point: {x:8, y:8},
+        init_moves: [
+          {x: 6, y: 10, color: WGo.W},
+          {x: 7, y: 10, color: WGo.W},
+          {x: 8, y: 10, color: WGo.W},
+          {x: 9, y: 10, color: WGo.W},
+
+          {x: 5, y: 9, color: WGo.W},
+          {x: 6, y: 9, color: WGo.B},
+          {x: 7, y: 9, color: WGo.B},
+          {x: 8, y: 9, color: WGo.B},
+          {x: 9, y: 9, color: WGo.B},
+          {x: 10, y: 9, color: WGo.W},
+
+          {x: 5, y: 8, color: WGo.W},
+          {x: 6, y: 8, color: WGo.B},
+          {x: 9, y: 8, color: WGo.B},
+          {x: 10, y: 8, color: WGo.W},
+
+          {x: 5, y: 7, color: WGo.W},
+          {x: 6, y: 7, color: WGo.B},
+          {x: 7, y: 7, color: WGo.B},
+          {x: 7, y: 7, color: WGo.B},
+          {x: 9, y: 7, color: WGo.B},
+          {x: 10, y: 7, color: WGo.W},
+
+          {x: 6, y: 6, color: WGo.W},
+          {x: 7, y: 6, color: WGo.B},
+          {x: 8, y: 6, color: WGo.B},
+          {x: 9, y: 6, color: WGo.W},
+
+          {x: 7, y: 5, color: WGo.W},
+          {x: 8, y: 5, color: WGo.W},
+        ]
+      },
+      //{
+        //id:9,
+        //type: 'dynamic',
+        //description: 'live by playing the vital point',
+        //target_group: {x:9, y:6},
+        //vital_point: {x:8, y:8},
+        //init_moves: [
+          //{x: 6, y: 10, color: WGo.B},
+          //{x: 7, y: 10, color: WGo.B},
+          //{x: 8, y: 10, color: WGo.B},
+          //{x: 9, y: 10, color: WGo.B},
+
+          //{x: 5, y: 9, color: WGo.B},
+          //{x: 6, y: 9, color: WGo.W},
+          //{x: 7, y: 9, color: WGo.W},
+          //{x: 8, y: 9, color: WGo.W},
+          //{x: 9, y: 9, color: WGo.W},
+          //{x: 10, y: 9, color: WGo.B},
+
+          //{x: 5, y: 8, color: WGo.B},
+          //{x: 6, y: 8, color: WGo.W},
+          //{x: 9, y: 8, color: WGo.W},
+          //{x: 10, y: 8, color: WGo.B},
+
+          //{x: 5, y: 7, color: WGo.B},
+          //{x: 6, y: 7, color: WGo.W},
+          //{x: 7, y: 7, color: WGo.W},
+          //{x: 7, y: 7, color: WGo.W},
+          //{x: 9, y: 7, color: WGo.W},
+          //{x: 10, y: 7, color: WGo.B},
+
+          //{x: 6, y: 6, color: WGo.B},
+          //{x: 7, y: 6, color: WGo.W},
+          //{x: 8, y: 6, color: WGo.W},
+          //{x: 9, y: 6, color: WGo.B},
+
+          //{x: 7, y: 5, color: WGo.B},
+          //{x: 8, y: 5, color: WGo.B},
+        //]
+      //}
     ];
 
     //shift lvl over 10 places for each lvl
@@ -109,6 +249,10 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
       var direction = ((key)%2)
       value.target_group.x += key * shift
       value.target_group.y += direction * shift
+      if(value.vital_point) {
+        value.vital_point.x += key * shift
+        value.vital_point.y += direction * shift
+      }
       angular.forEach(value.init_moves, function(stone, k) {
         stone.x += key * shift;
         stone.y += direction * shift;
@@ -204,29 +348,20 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     var game = this.game;
 
     //handle invalid moves
-    if (!game.isValid(x,y, WGo.W)) {return false}
+    if (!game.isValid(x,y, WGo.W)) {
+      console.log('invalid');
+      return false
+    }
 
     //remove any captured stones from the board
     var captures = game.play(x,y, WGo.W);
-    angular.forEach(captures, function(value) {
-      board.removeObject(value);
-    });
-
-    //add the valid move
-    board.addObject({
-      x: x,
-      y: y,
-      c: WGo.W
-    });
-
-    //add move to temp storage
-    this.move_storage.push({x: x,y: y});
+    this.setUpPosition()
 
     //check if you won
     var target_group = this.getCurrentLevel().target_group;
 
+    //if player captured the target group they win lvl
     if (game.getStone(target_group.x, target_group.y) == 0) {
-      //no more playing!
       board.removeEventListener("click", board.listener);
       //go to next lvl
       this.current_lvl += 1;
@@ -251,9 +386,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     }
   }
 
-  Game.prototype.aiRespond = function() {
-    //make a smart move and put event listener back on
-
+  Game.prototype.getLiberties = function(x,y,color) {
     //recursive function -- find group and liberties-- 
     var self = this
     var examine_group = function(tested, liberties, x, y, color) {
@@ -287,45 +420,58 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
     var testSchema = new WGo.Position(this.game.size)
     var libs = []
-    var t = this.getCurrentLevel().target_group;
-    var black_group = {x:t.x, y:t.y, color: 1}
 
     examine_group(testSchema,
                   libs,
-                  black_group.x,
-                  black_group.y,
-                  black_group.color)
+                  x,
+                  y,
+                  1);
+    return libs;
+  }
 
+  Game.prototype.aiRespond = function() {
+    //make a smart move and put event listener back on
+
+    if (this.getCurrentLevel().vital_point) {
+      console.log('playing vital point');
+      var cl = this.getCurrentLevel();
+      console.log(cl.vital_point);
+      this.game.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
+      this.setUpPosition();
+
+      //reattach listener
+      this.board.addEventListener('click', this.board._listener);
+
+      return;
+    }
+
+    var self = this
+    var group = this.getCurrentLevel().target_group;
+
+    var libs = this.getLiberties(group.x,group.y)
     //find the best liberty to play on...
     var potential_moves = [];
     angular.forEach(libs, function(lib) {
       //play here and examine group... record how many libs you have...
       self.game.play(lib.x, lib.y, WGo.B);
-      var libs_n = []
-      var testSchema_n = new WGo.Position(self.game.size)
-      examine_group(testSchema_n,
-                    libs_n,
-                    black_group.x,
-                    black_group.y,
-                    black_group.color)
+      var libs_n = self.getLiberties(group.x, group.y);
       potential_moves.push({move: lib, libs: libs_n.length});
+
+      //then remove the stone
       self.game.removeStone(lib.x, lib.y);
     });
     potential_moves = _.sortBy(potential_moves, 'libs');
     potential_moves.reverse();
-
-    //TODO don't play self atari
+    //don't play self atari
+    if (potential_moves[0].libs<1) {
+      console.log('self atari');
+    }
 
     //play for maximum liberty extension
     var lx = potential_moves[0].move.x
     var ly = potential_moves[0].move.y
     this.game.play(lx, ly, WGo.B)
-    this.board.addObject({
-      x: lx,
-      y: ly,
-      c: WGo.B
-    });
-    this.move_storage.push({x: lx,y: ly})
+    this.setUpPosition();
 
     //reattach listener
     this.board.addEventListener('click', this.board._listener);
@@ -333,7 +479,6 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
   Game.prototype.nextProblem = function() {
     //set up listeners for next problem
-    this.move_storage = []
     this.setUpListener();
   }
 
@@ -345,7 +490,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
     //reset game and listeners
     game.firstPosition();
-    this.clearListener();
+    //this.clearListener();
 
     //get array of initial moves for problem
     var init_moves = this.getCurrentLevel().init_moves;
@@ -364,16 +509,8 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     console.log('restart');
     var self = this;
 
-    angular.forEach(this.move_storage, function(value, k) {
-      self.game.removeStone(value.x, value.y)
-    })
-
-    this.move_storage = [];
-    this.setUpPosition();
-
-    //timeout( function() {
-      //self.setUpProblem();
-    //},500)
+    //attach listeners
+    this.setUpProblems();
   }
 
   return Game;

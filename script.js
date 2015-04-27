@@ -7,6 +7,8 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
     element: document.getElementById("board"),
     width: 3300,
   });
+  scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
+
 
   scope.game.setUpProblems();
   scope.game.setUpListener();
@@ -25,6 +27,7 @@ app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, time
   scope.$on('win', function(event, args) {
     timeout( function() {
       scope.game.nextProblem();
+      scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
 
       var center = scope.game.getProblemCenter();
       var w = $('.port').width()
