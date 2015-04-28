@@ -6,18 +6,21 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     this.current_lvl = 0;
 
     //make a new game object
-    this.game = new WGo.Game(80);
+    this.game = new WGo.Game(52);
 
     //draw the board
     this.board = new WGo.Board(config.element, {
       width: config.width,
       stoneSize: 1,
-      shadowSize: 0.4,
+      shadowSize: 0.5,
       stoneHandler: WGo.Board.drawHandlers.MONO,
+      //stoneHandler: WGo.Board.drawHandlers.NORMAL,
+      //stoneHandler: WGo.Board.drawHandlers.PAINTED,
       size: this.game.size,
       background: "",
 
     });
+
 
     //store current listener here...
     this.board.listener = null;
@@ -274,22 +277,27 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
     //shift lvl over 10 places for each lvl
     this.shiftLevels();
+
   }
 
   Game.prototype.shiftLevels = function() {
     //moves the problems over
-    var shift = 7
+    var shift = 11
+    var vertical_padding = 3;
     angular.forEach(this.levels, function(value, key) {
-      var direction = ((key)%2)
-      value.target_group.x += key * shift
-      value.target_group.y += direction * shift
+      var row = Math.floor(key/3);
+      var col = key%3;
+
+      value.target_group.x += col * shift
+      value.target_group.y += row * shift + vertical_padding;
       if(value.vital_point) {
-        value.vital_point.x += key * shift
-        value.vital_point.y += direction * shift
+        value.vital_point.x += col * shift
+        value.vital_point.y += row * shift + vertical_padding;
       }
+
       angular.forEach(value.init_moves, function(stone, k) {
-        stone.x += key * shift;
-        stone.y += direction * shift;
+        stone.x +=  col  * shift;
+        stone.y +=  row * shift + vertical_padding;
       })
     })
   }
@@ -335,7 +343,7 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     console.log('set up position');
     this.board.removeAllObjects();
     var schema = this.game.position.schema
-
+    
     for (var i = 0, len = schema.length; i < len; i++) {
       if (schema[i] == 1) {
         this.board.addObject({
@@ -563,3 +571,10 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
   return Game;
 }]);
+
+app.factory('Board', function() {
+  var Board = function(config) {
+    console.log('board initiated');
+  }
+  return Board;
+})

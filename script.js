@@ -1,11 +1,14 @@
 var app = angular.module("surroundingGame", []);
 
-
-app.controller('main', ['Game', '$scope', '$timeout', function(Game, scope, timeout) {
+app.controller('main', 
+               [ 'Game',
+                 '$scope',
+                 '$timeout',
+                 function(Game, scope, timeout) {
 
   scope.game = new Game({
     element: document.getElementById("board"),
-    width: 3300,
+    width: 2145,
   });
   scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
   scope.current_lvl = scope.game.current_lvl;
