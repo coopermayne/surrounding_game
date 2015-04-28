@@ -11,14 +11,13 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     //draw the board
     this.board = new WGo.Board(config.element, {
       width: config.width,
-      stoneSize: 1,
-      shadowSize: 0.5,
-      stoneHandler: WGo.Board.drawHandlers.MONO,
+      stoneSize: 1.02,
+      //shadowSize: 0.5,
+      //stoneHandler: WGo.Board.drawHandlers.MONO,
       //stoneHandler: WGo.Board.drawHandlers.NORMAL,
-      //stoneHandler: WGo.Board.drawHandlers.PAINTED,
+      stoneHandler: WGo.Board.drawHandlers.PAINTED,
       size: this.game.size,
       background: "",
-
     });
 
 
@@ -342,20 +341,76 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
   Game.prototype.setUpPosition = function() {
     console.log('set up position');
     this.board.removeAllObjects();
-    var schema = this.game.position.schema
+    var schema = this.game.position.schema;
+
+    custom_b =  {
+      stone: {
+        draw: function(args, board) {
+          var xr = board.getX(args.x),
+          yr = board.getY(args.y),
+          sr = board.stoneRadius,
+          radgrad;
+
+          radgrad = this.createRadialGradient(xr-2*sr/5,yr-2*sr/5,1,xr-sr/5,yr-sr/5,4*sr/5);
+          radgrad.addColorStop(0, '#111');
+          radgrad.addColorStop(1, '#000');				
+
+          this.beginPath();
+          this.fillStyle = radgrad;
+          this.arc(xr, yr, Math.max(0, sr-0.5), 0, 2*Math.PI, true);
+          this.fill();
+
+          this.beginPath();
+          this.lineWidth = sr/6;
+
+          this.strokeStyle = '#ccc';
+          //this.arc(xr-sr/8, yr-sr/8, sr/2, Math.PI, 1.5*Math.PI);
+
+          this.stroke();
+        }
+      },
+    }
+
+    var custom_w = {
+      stone: {
+        draw: function(args, board) {
+          var xr = board.getX(args.x),
+          yr = board.getY(args.y),
+          sr = board.stoneRadius,
+          radgrad;
+
+          radgrad = this.createRadialGradient(xr-2*sr/5,yr-2*sr/5,2,xr-sr/5,yr-sr/5,4*sr/5);
+          radgrad.addColorStop(0, '#fff');
+          radgrad.addColorStop(1, '#ddd');
+
+          this.beginPath();
+          this.fillStyle = radgrad;
+          this.arc(xr, yr, Math.max(0, sr-0.5), 0, 2*Math.PI, true);
+          this.fill();
+
+          this.beginPath();
+          this.lineWidth = sr/6;
+
+          this.strokeStyle = '#999';
+          //this.arc(xr+sr/8, yr+sr/8, sr/2, 0, Math.PI/2, false);
+
+          this.stroke();
+        }
+      }
+    }
     
     for (var i = 0, len = schema.length; i < len; i++) {
       if (schema[i] == 1) {
         this.board.addObject({
           x: this.helpers.idxToCoord(i, this.board.size).x,
           y: this.helpers.idxToCoord(i, this.board.size).y,
-          c: WGo.B
+          type: custom_b
         })
       } else if (schema[i]==-1){
         this.board.addObject({
           x: this.helpers.idxToCoord(i, this.board.size).x,
           y: this.helpers.idxToCoord(i, this.board.size).y,
-          c: WGo.W
+          type: custom_w
         })
       } else {
 
