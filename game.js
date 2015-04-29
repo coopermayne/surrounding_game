@@ -1,6 +1,5 @@
 app.factory('Board', function() {
   var Board = function(config) {
-    console.log('board initiated');
 
     /*store all objects on board*/
     this.objects = [];
@@ -79,7 +78,6 @@ app.factory('Board', function() {
   }
 
   Board.prototype.removeEventListener = function() {
-    console.log('remove listener');
     this.el.removeEventListener(this.l.type, this.l, true);
   }
 
@@ -101,7 +99,6 @@ app.factory('Board', function() {
 app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootScope, Board) {
   var Game = function(config) {
     //instantiate a new game
-    console.log('game instantiated');
 
     this.current_lvl = 0;
 
@@ -517,7 +514,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 
 
   Game.prototype.setUpPosition = function() {
-    console.log('set up position');
     this.board.removeAllObjects();
     var schema = this.game.position.schema;
 
@@ -563,6 +559,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
   }
 
   Game.prototype.clickListener= function(x,y,z) {
+
+    var sound = new Howl({
+      urls: ['play.wav'],
+      volume: 0.1
+    }).play();
+
     var board = this.board;
     var game = this.game;
 
@@ -743,7 +745,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 
   Game.prototype.setUpProblems = function() {
     //add all problems to board
-    console.log('setting up problems');
     var game = this.game;
     var board = this.board;
 
