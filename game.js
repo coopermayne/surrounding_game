@@ -5,6 +5,11 @@ app.factory('Board', function() {
     /*store all objects on board*/
     this.objects = [];
 
+    //store listeners for removal or reattachment
+    this.l = null;
+    this.listener = null;
+    this._listener = null;
+
     /*attach to element and make sure it dynamically sizes to div*/
     this.w = 1000;
     this.h = 1000;
@@ -16,12 +21,8 @@ app.factory('Board', function() {
     this.paper.setSize('100%', '100%');
 
     this.drawLines();
-
-    /*var that = this;*/
-    /*this.addEventListener('click', function(x, y, e) {*/
-      /*that.addObject(x,y, 'white' )*/
-    /*});*/
   }
+
   Board.prototype.drawLines = function() {
     var top_row = this.getY(0);
     var bottom_row = this.getY(this.size-1)
@@ -69,10 +70,12 @@ app.factory('Board', function() {
       }
     }
     this.el.addEventListener(type, evListener, true);
+    this.l = evListener;
   }
 
   Board.prototype.removeEventListener = function() {
-    console.log('remove event listeners');
+    console.log('remove listener');
+    this.el.removeEventListener(this.l.type, this.l, true);
   }
 
   Board.prototype.getX = function(x) {
@@ -95,7 +98,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 9;
+    this.current_lvl = 2;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -106,9 +109,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       element: config.element,
     })
 
-    //store current listener here...
-    this.board.listener = null;
-
     this.levels = [
       {
         id:0,
@@ -116,7 +116,11 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         description: 'capture one stone',
         target_group: {x:9, y:5},
         init_moves: [
-          {x: 9, y: 5, color: WGo.B}
+          {x: 9, y: 5, color: WGo.B},
+
+          {x: 9, y: 4, color: WGo.W},
+          {x: 9, y: 6, color: WGo.W},
+          {x: 8, y: 5, color: WGo.W}
         ]
       },
       {
@@ -126,18 +130,42 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         target_group: {x:9, y:5},
         init_moves: [
           {x: 9, y: 6, color: WGo.B},
-          {x: 9, y: 5, color: WGo.B}
+          {x: 9, y: 5, color: WGo.B},
+
+          {x: 9, y: 4, color: WGo.W},
+          {x: 9, y: 7, color: WGo.W},
+          {x: 8, y: 5, color: WGo.W},
+          {x: 8, y: 6, color: WGo.W},
+
+          {x: 10, y: 5, color: WGo.W},
         ]
       },
       {
         id:2,
         type: 'static',
         description: 'capture three stones',
-        target_group: {x:9, y:5},
+        target_group: {x:9, y:6},
         init_moves: [
+          {x: 10, y: 3, color: WGo.W},
+          {x: 11, y: 3, color: WGo.W},
+          {x: 12, y: 4, color: WGo.W},
+          {x: 12, y: 5, color: WGo.W},
+          {x: 12, y: 6, color: WGo.W},
+          {x: 10, y: 7, color: WGo.W},
+          {x: 11, y: 7, color: WGo.W},
+          {x: 9, y: 8, color: WGo.W},
+          {x: 9, y: 4, color: WGo.W},
+          {x: 9, y: 5, color: WGo.W},
+          {x: 8, y: 6, color: WGo.W},
+          {x: 8, y: 7, color: WGo.W},
+
+          {x: 10, y: 4, color: WGo.B},
+          {x: 11, y: 4, color: WGo.B},
+          {x: 11, y: 5, color: WGo.B},
           {x: 9, y: 6, color: WGo.B},
-          {x: 9, y: 5, color: WGo.B},
-          {x: 10, y: 5, color: WGo.B}
+          {x: 10, y: 6, color: WGo.B},
+          {x: 11, y: 6, color: WGo.B},
+          {x: 9, y: 7, color: WGo.B},
         ]
       },
       {
@@ -171,16 +199,31 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:5,
         type: 'static',
         description: 'capture group with one eye',
-        target_group: {x:9, y:6},
+        target_group: {x:9, y:5},
         init_moves: [
-          {x: 9, y: 6, color: WGo.B},
-          {x: 8, y: 6, color: WGo.B},
-          {x: 10, y: 6, color: WGo.B},
-          {x: 9, y: 4, color: WGo.B},
-          {x: 8, y: 4, color: WGo.B},
-          {x: 10, y: 4, color: WGo.B},
+          {x: 9, y: 4, color: WGo.W},
+          {x: 8, y: 4, color: WGo.W},
+          {x: 10, y: 4, color: WGo.W},
+          {x: 9, y: 5, color: WGo.B},
           {x: 8, y: 5, color: WGo.B},
           {x: 10, y: 5, color: WGo.B},
+          {x: 8, y: 6, color: WGo.B},
+          {x: 10, y: 6, color: WGo.B},
+          {x: 9, y: 7, color: WGo.B},
+          {x: 8, y: 7, color: WGo.B},
+          {x: 10, y: 7, color: WGo.B},
+          {x: 9, y: 8, color: WGo.W},
+          {x: 8, y: 8, color: WGo.W},
+          {x: 10, y: 8, color: WGo.W},
+
+
+          {x: 7, y: 5, color: WGo.W},
+          {x: 7, y: 6, color: WGo.W},
+          {x: 7, y: 7, color: WGo.W},
+
+          {x: 11, y: 5, color: WGo.W},
+          {x: 11, y: 6, color: WGo.W},
+          {x: 11, y: 7, color: WGo.W},
         ]
       },
       {
@@ -382,6 +425,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     angular.forEach(this.levels, function(value, key) {
       var row = Math.floor(key/3);
       var col = key%3;
+
+      if (row == 1 || row == 3) {
+        col = 2-col;
+      }
 
       value.target_group.x += col * shift + h_padding
       value.target_group.y += row * shift + vertical_padding;
@@ -606,7 +653,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     var group = this.getCurrentLevel().target_group;
 
     var libs = this.getLiberties(group.x,group.y)
-    console.log(libs);
     //find the best liberty to play on...
     var potential_moves = [];
     angular.forEach(libs, function(lib) {
