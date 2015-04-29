@@ -56,7 +56,7 @@ app.controller('main',
       $(".board_cont").animate({ 
         marginLeft: determine_margin().left,
         marginTop: determine_margin().up
-      }, 1000)
+      }, 1500)
 
     }, 1500)
     scope.$digest();

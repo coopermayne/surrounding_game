@@ -44,10 +44,15 @@ app.factory('Board', function() {
 
   Board.prototype.addObject = function(params) {
     /*pararms = {x: xval, y: yval, type: 'white'}*/
-
-    var radius = this.w/(this.size + 1);
+    var color;
+    if (params.type == 'black') {
+      var color = 'black';
+    } else if (params.type == 'white'){
+      var color = 'white';
+    }
+    var radius = this.w/(this.size + 2);
     radius = radius/2
-    var obj = this.paper.circle(this.getX(params.x), this.getY(params.y), radius).attr({fill: params.type});
+    var obj = this.paper.circle(this.getX(params.x), this.getY(params.y), radius).attr({'stroke-width':this.line_width,fill: color});
     this.objects.push(obj);
   }
 
@@ -98,7 +103,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 2;
+    this.current_lvl = 0;
 
     //make a new game object
     this.game = new WGo.Game(62);
