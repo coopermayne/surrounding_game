@@ -3,10 +3,6 @@ body {
   margin: 0 0;
 }
 
-.container {
-  width: 600px;
-  margin: 0 auto;
-}
 
 .progress_cont {
   border-bottom: 1px solid #cccccc;
@@ -17,30 +13,42 @@ body {
   height: 3px;
 }
 
+#container {
+  margin: 0 auto;
+}
+
+
 .status_bar {
   width: 100%;
-  height: 50px;
   text-align: center;
   font-family: sans-serif, sans-serif;
   color: rgb(68,68,68);
 }
 
-.wgo-board {
-  margin-left: 0;
-}
-
 .viewport {
   position: relative;
-  width:100%;
-  height: 450px;
+  max-height: 500px;
+  height: 70%;
+  width: 100%;
   overflow: hidden;
 }
 
-.port {
+.board_cont {
+  width: 700%;
+  height: 700%;
+  margin: -100px -450px
+}
+
+#board {
+  height: 100%;
+  width: 100%;
+}
+
+.fade {
   position: absolute;
   pointer-events:none;
   z-index: 500;
-  height:450px;
+  height:100%;
   width: 100%;
   /*-webkit-box-shadow: inset 0px 0px 57px 36px rgba(255,255,255,1);*/
   /*-moz-box-shadow: inset 0px 0px 57px 36px rgba(255,255,255,1);*/
@@ -49,7 +57,7 @@ body {
 
 #restart_button{
   display: block;
-  margin-top: 20px;
+  margin-top: 40px;
   margin-left: auto;
   margin-right: auto
 }

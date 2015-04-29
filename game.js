@@ -1,4 +1,96 @@
-app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
+app.factory('Board', function() {
+  var Board = function(config) {
+    console.log('board initiated');
+
+    /*store all objects on board*/
+    this.objects = [];
+
+    /*attach to element and make sure it dynamically sizes to div*/
+    this.w = 1000;
+    this.h = 1000;
+    this.size = config.size;  
+    this.line_width=0.5;
+    this.el = config.element;
+    this.paper = new Raphael(config.element);
+    this.paper.setViewBox(0,0,this.w,this.h,true);
+    this.paper.setSize('100%', '100%');
+
+    this.drawLines();
+
+    /*var that = this;*/
+    /*this.addEventListener('click', function(x, y, e) {*/
+      /*that.addObject(x,y, 'white' )*/
+    /*});*/
+  }
+  Board.prototype.drawLines = function() {
+    var top_row = this.getY(0);
+    var bottom_row = this.getY(this.size-1)
+    var left_col = this.getX(0);
+    var right_col = this.getX(this.size-1)
+
+    for (var i = 0, len = this.size; i < len; i++) {
+      var col_coord = this.getX(i)
+      var vpath = "M "+ col_coord + " " + top_row +" l 0 " + ( bottom_row - top_row );
+      var line_v = this.paper.path(vpath);
+      line_v.attr({'stroke-width': this.line_width})
+
+      var row_coord = this.getY(i)
+      var tpath = "M "+ left_col + " " + row_coord +" l " + ( right_col - left_col ) + " 0";
+      var line_h = this.paper.path(tpath);
+      line_h.attr({'stroke-width': this.line_width})
+    }
+  }
+
+  Board.prototype.addObject = function(params) {
+    /*pararms = {x: xval, y: yval, type: 'white'}*/
+
+    var radius = this.w/(this.size + 1);
+    radius = radius/2
+    var obj = this.paper.circle(this.getX(params.x), this.getY(params.y), radius).attr({fill: params.type});
+    this.objects.push(obj);
+  }
+
+  Board.prototype.removeAllObjects = function() {
+    this.objects
+    angular.forEach(this.objects, function(object, key) {
+      object.remove();
+    })
+    this.objects = [];
+  }
+
+  Board.prototype.addEventListener = function(type, callback) {
+    var _this = this;
+    var evListener = {
+      type: type,
+      callback: callback,
+      handleEvent: function(e) {
+        var coo = getMousePos.call(_this, e);
+        callback(coo.x, coo.y, e);
+      }
+    }
+    this.el.addEventListener(type, evListener, true);
+  }
+
+  Board.prototype.removeEventListener = function() {
+    console.log('remove event listeners');
+  }
+
+  Board.prototype.getX = function(x) {
+    var gap = this.w/(this.size+1)
+    var col = gap*(x+1);
+    return col
+  }
+
+  Board.prototype.getY = function(y) {
+    var gap = this.h/(this.size+1)
+    var row = gap*(y+1);
+    return row
+  }
+
+  return Board;
+});
+
+app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootScope, Board) {
   var Game = function(config) {
     //instantiate a new game
     console.log('game instantiated');
@@ -6,24 +98,16 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     this.current_lvl = 0;
 
     //make a new game object
-    this.game = new WGo.Game(52);
+    this.game = new WGo.Game(62);
 
     //draw the board
-    this.board = new WGo.Board(config.element, {
-      width: config.width,
-      stoneSize: 1.02,
-      //shadowSize: 0.5,
-      //stoneHandler: WGo.Board.drawHandlers.MONO,
-      //stoneHandler: WGo.Board.drawHandlers.NORMAL,
-      stoneHandler: WGo.Board.drawHandlers.PAINTED,
+    this.board = new Board({
       size: this.game.size,
-      background: "",
-    });
-
+      element: config.element,
+    })
 
     //store current listener here...
     this.board.listener = null;
-    //store initial problem position so they can return to it
 
     this.levels = [
       {
@@ -106,34 +190,34 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
         target_group: {x:9, y:6},
         init_moves: [
           //black stones
+          {x: 7, y: 6, color: WGo.B},
           {x: 8, y: 6, color: WGo.B},
           {x: 9, y: 6, color: WGo.B},
           {x: 10, y: 6, color: WGo.B},
-          {x: 11, y: 6, color: WGo.B},
+          {x: 7, y: 4, color: WGo.B},
           {x: 8, y: 4, color: WGo.B},
           {x: 9, y: 4, color: WGo.B},
           {x: 10, y: 4, color: WGo.B},
-          {x: 11, y: 4, color: WGo.B},
-          {x: 8, y: 5, color: WGo.B},
-          {x: 11, y: 5, color: WGo.B},
+          {x: 7, y: 5, color: WGo.B},
+          {x: 10, y: 5, color: WGo.B},
 
           //white stones
-          {x: 12, y: 4, color: WGo.W},
-          {x: 12, y: 5, color: WGo.W},
-          {x: 12, y: 6, color: WGo.W},
-          {x: 7, y: 4, color: WGo.W},
-          {x: 7, y: 5, color: WGo.W},
-          {x: 7, y: 6, color: WGo.W},
+          {x: 11, y: 4, color: WGo.W},
+          {x: 11, y: 5, color: WGo.W},
+          {x: 11, y: 6, color: WGo.W},
+          {x: 6, y: 4, color: WGo.W},
+          {x: 6, y: 5, color: WGo.W},
+          {x: 6, y: 6, color: WGo.W},
 
+          {x: 7, y: 7, color: WGo.W},
           {x: 8, y: 7, color: WGo.W},
           {x: 9, y: 7, color: WGo.W},
           {x: 10, y: 7, color: WGo.W},
-          {x: 11, y: 7, color: WGo.W},
 
+          {x: 7, y: 3, color: WGo.W},
           {x: 8, y: 3, color: WGo.W},
           {x: 9, y: 3, color: WGo.W},
           {x: 10, y: 3, color: WGo.W},
-          {x: 11, y: 3, color: WGo.W},
         ]
       },
       {
@@ -143,21 +227,21 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
         target_group: {x:9, y:7},
         init_moves: [
           //white moves
-          {x: 8, y: 6, color: WGo.W},
-          {x: 9, y: 6, color: WGo.W},
-          {x: 6, y: 7, color: WGo.W},
-          {x: 7, y: 7, color: WGo.W},
-          {x: 10, y: 7, color: WGo.W},
-          {x: 10, y: 8, color: WGo.W},
-          {x: 9, y: 9, color: WGo.W},
+          {x: 8, y: 4, color: WGo.W},
+          {x: 9, y: 4, color: WGo.W},
+          {x: 6, y: 5, color: WGo.W},
+          {x: 7, y: 5, color: WGo.W},
+          {x: 10, y: 5, color: WGo.W},
+          {x: 10, y: 6, color: WGo.W},
+          {x: 9, y: 7, color: WGo.W},
 
           //black moves 
-          {x: 9, y: 7, color: WGo.B},
+          {x: 9, y: 5, color: WGo.B},
+          {x: 8, y: 5, color: WGo.B},
+          {x: 7, y: 6, color: WGo.B},
+          {x: 7, y: 7, color: WGo.B},
           {x: 8, y: 7, color: WGo.B},
-          {x: 7, y: 8, color: WGo.B},
-          {x: 7, y: 9, color: WGo.B},
-          {x: 8, y: 9, color: WGo.B},
-          {x: 8, y: 10, color: WGo.B},
+          {x: 8, y: 8, color: WGo.B},
         ]
       },
       {
@@ -276,26 +360,26 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
     //shift lvl over 10 places for each lvl
     this.shiftLevels();
-
   }
 
   Game.prototype.shiftLevels = function() {
     //moves the problems over
-    var shift = 11
-    var vertical_padding = 3;
+    var shift = 15
+    var vertical_padding = 1;
+    var h_padding = 5;
     angular.forEach(this.levels, function(value, key) {
       var row = Math.floor(key/3);
       var col = key%3;
 
-      value.target_group.x += col * shift
+      value.target_group.x += col * shift + h_padding
       value.target_group.y += row * shift + vertical_padding;
       if(value.vital_point) {
-        value.vital_point.x += col * shift
+        value.vital_point.x += col * shift + h_padding
         value.vital_point.y += row * shift + vertical_padding;
       }
 
       angular.forEach(value.init_moves, function(stone, k) {
-        stone.x +=  col  * shift;
+        stone.x +=  col  * shift + h_padding;
         stone.y +=  row * shift + vertical_padding;
       })
     })
@@ -343,74 +427,18 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     this.board.removeAllObjects();
     var schema = this.game.position.schema;
 
-    custom_b =  {
-      stone: {
-        draw: function(args, board) {
-          var xr = board.getX(args.x),
-          yr = board.getY(args.y),
-          sr = board.stoneRadius,
-          radgrad;
-
-          radgrad = this.createRadialGradient(xr-2*sr/5,yr-2*sr/5,1,xr-sr/5,yr-sr/5,4*sr/5);
-          radgrad.addColorStop(0, '#111');
-          radgrad.addColorStop(1, '#000');				
-
-          this.beginPath();
-          this.fillStyle = radgrad;
-          this.arc(xr, yr, Math.max(0, sr-0.5), 0, 2*Math.PI, true);
-          this.fill();
-
-          this.beginPath();
-          this.lineWidth = sr/6;
-
-          this.strokeStyle = '#ccc';
-          //this.arc(xr-sr/8, yr-sr/8, sr/2, Math.PI, 1.5*Math.PI);
-
-          this.stroke();
-        }
-      },
-    }
-
-    var custom_w = {
-      stone: {
-        draw: function(args, board) {
-          var xr = board.getX(args.x),
-          yr = board.getY(args.y),
-          sr = board.stoneRadius,
-          radgrad;
-
-          radgrad = this.createRadialGradient(xr-2*sr/5,yr-2*sr/5,2,xr-sr/5,yr-sr/5,4*sr/5);
-          radgrad.addColorStop(0, '#fff');
-          radgrad.addColorStop(1, '#ddd');
-
-          this.beginPath();
-          this.fillStyle = radgrad;
-          this.arc(xr, yr, Math.max(0, sr-0.5), 0, 2*Math.PI, true);
-          this.fill();
-
-          this.beginPath();
-          this.lineWidth = sr/6;
-
-          this.strokeStyle = '#999';
-          //this.arc(xr+sr/8, yr+sr/8, sr/2, 0, Math.PI/2, false);
-
-          this.stroke();
-        }
-      }
-    }
-    
     for (var i = 0, len = schema.length; i < len; i++) {
       if (schema[i] == 1) {
         this.board.addObject({
           x: this.helpers.idxToCoord(i, this.board.size).x,
           y: this.helpers.idxToCoord(i, this.board.size).y,
-          type: custom_b
+          type: 'black'
         })
       } else if (schema[i]==-1){
         this.board.addObject({
           x: this.helpers.idxToCoord(i, this.board.size).x,
           y: this.helpers.idxToCoord(i, this.board.size).y,
-          type: custom_w
+          type: 'white'
         })
       } else {
 
@@ -446,7 +474,6 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
 
     //handle invalid moves
     if (!game.isValid(x,y, WGo.W)) {
-      console.log('invalid');
       return false
     }
 
@@ -534,12 +561,10 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
       
       if (this.game.isValid(cl.vital_point.x, cl.vital_point.y, WGo.B)) {
       //if vital point hasn't been played play it...
-        console.log('playing vital point');
         this.game.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
       } else {
         //if it has been... and its problem 9 -- capture white group
         if (cl.id == 9) {
-          console.log('keep capturing');
           if (this.game.isValid(cl.vital_point.x, cl.vital_point.y-1, WGo.B)) {
             this.game.play(cl.vital_point.x, cl.vital_point.y-1, WGo.B);
           } else if (this.game.isValid(cl.vital_point.x-1, cl.vital_point.y, WGo.B)) {
@@ -575,7 +600,6 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
     potential_moves.reverse();
     //don't play self atari
     if (potential_moves[0].libs<1) {
-      console.log('self atari');
     }
 
     //play for maximum liberty extension
@@ -617,7 +641,6 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
   }
 
   Game.prototype.restart = function() {
-    console.log('restart');
     var self = this;
 
     //attach listeners
@@ -627,9 +650,17 @@ app.factory('Game', ['$timeout', '$rootScope', function(timeout, rootScope) {
   return Game;
 }]);
 
-app.factory('Board', function() {
-  var Board = function(config) {
-    console.log('board initiated');
-  }
-  return Board;
-})
+
+var getMousePos= function(e) {
+  var coo = {};
+  var el = $(this.el)
+
+  var off_x = e.offsetX;
+  var off_y = e.offsetY;
+
+  coo.x = Math.round( (off_x/el.width()) * ( this.size + 1 )) -1;
+  coo.y = Math.round( (off_y/el.height()) * ( this.size + 1 )) -1;
+  coo.e = e;
+
+  return coo;
+}
