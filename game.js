@@ -115,18 +115,19 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     })
 
     this.levels = [
-      //{
-        //id:0,
-        //type: 'static',
-        //description: 'capture one stone',
-        //target_group: {x:9, y:5},
-        //init_moves: [
-        //]
-      //},
+      {
+        id:0,
+        type: 'play',
+        description: 'capture one stone',
+        center_coord: {x:9, y:5},
+        init_moves: [
+        ]
+      },
       {
         id:1,
         type: 'static',
         description: 'capture one stone',
+        center_coord: {x:9, y:5},
         target_group: {x:9, y:5},
         init_moves: [
           {x: 9, y: 5, color: WGo.B},
@@ -140,6 +141,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:2,
         type: 'static',
         description: 'capture two stones',
+        center_coord: {x:9, y:5},
         target_group: {x:9, y:5},
         init_moves: [
           {x: 9, y: 6, color: WGo.B},
@@ -157,6 +159,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:3,
         type: 'static',
         description: 'capture three stones',
+        center_coord: {x:10, y:6},
         target_group: {x:9, y:6},
         init_moves: [
           {x: 10, y: 3, color: WGo.W},
@@ -184,6 +187,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       {
         id:4,
         type: 'dynamic',
+        center_coord: {x:9, y:6},
         target_group: {x:8, y:7},
         description: 'capture using ladder',
         init_moves: [
@@ -199,6 +203,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       {
         id:5,
         type: 'dynamic',
+        center_coord: {x:9, y:6},
         target_group: {x: 8, y:7},
         description: 'capture using net',
         init_moves: [
@@ -214,6 +219,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:6,
         type: 'static',
         description: 'capture group with one eye',
+        center_coord: {x:9, y:5},
         target_group: {x:9, y:5},
         init_moves: [
           {x: 9, y: 4, color: WGo.W},
@@ -245,6 +251,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:7,
         type: 'dynamic',
         description: 'capture group with big eye',
+        center_coord: {x:8, y:5},
         target_group: {x:9, y:6},
         init_moves: [
           //black stones
@@ -282,6 +289,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:8,
         type: 'dynamic',
         description: 'snapback',
+        center_coord: {x:8, y:6},
         target_group: {x:9, y:5},
         init_moves: [
           {x: 8, y: 4, color: WGo.W},
@@ -304,6 +312,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:9,
         type: 'dynamic',
         description: 'kill by playing vital point',
+        center_coord: {x:7, y:7},
         target_group: {x:6, y:9},
         vital_point: {x:8, y:8},
         init_moves: [
@@ -344,6 +353,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:10,
         type: 'dynamic',
         description: 'live by playing the vital point',
+        center_coord: {x:9, y:7},
         target_group: {x:9, y:6},
         vital_point: {x:9, y:8},
         init_moves: [
@@ -445,8 +455,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         col = 2-col;
       }
 
-      value.target_group.x += col * shift + h_padding
-      value.target_group.y += row * shift + vertical_padding;
+      if(value.target_group){
+        value.target_group.x += col * shift + h_padding
+        value.target_group.y += row * shift + vertical_padding;
+      }
+      value.center_coord.x += col * shift + h_padding
+      value.center_coord.y += row * shift + vertical_padding;
       if(value.vital_point) {
         value.vital_point.x += col * shift + h_padding
         value.vital_point.y += row * shift + vertical_padding;
@@ -478,6 +492,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 
     var rx = (res.x.min+res.x.max)/2;
     var ry = (res.y.min+res.y.max)/2;
+
+    if (this.getCurrentLevel().id==0) {
+      var zz = this.getCurrentLevel().center_coord
+      var rx = zz.x;
+      var ry = zz.y
+    }
     var px = this.board.getX(rx);
     var py = this.board.getY(ry);
 
@@ -555,6 +575,16 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     var captures = game.play(x,y, WGo.W);
     this.setUpPosition()
 
+    //lvl 0 win -- just play....
+    if (this.getCurrentLevel().id==0) {
+      this.current_lvl +=1
+      board.removeEventListener("click", board.listener);
+      //
+      //inform the scope
+      console.log('BROADCAST: game won');
+      rootScope.$broadcast('win');
+      return;
+    }
     //check if you won
     var target_group = this.getCurrentLevel().target_group;
 

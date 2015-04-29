@@ -41,9 +41,6 @@ app.controller('main',
   scope.game.setUpProblems();
   scope.game.setUpListener();
 
-  var group = scope.game.getCurrentLevel().target_group;
-  var libs = scope.game.getLiberties(group.x,group.y);
-
   //dynamic sizing using javascript
   dynamic_sizing();
   $(window).resize( function() {
@@ -61,7 +58,7 @@ app.controller('main',
         marginTop: determine_margin().up
       }, 1500)
 
-    }, 1500)
+    }, 1000)
     scope.$digest();
   });
 
