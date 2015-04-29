@@ -22,8 +22,6 @@ app.controller('main',
     rendered_center = {}
     rendered_center.x = center.x*(rendered_w/1000);
     rendered_center.y = center.y*(rendered_h/1000);
-    console.log(center);
-    console.log(rendered_center);
     var center_viewport_x = $('.viewport').width()/2;
     var center_viewport_y = $('.viewport').height()/2;
     $(".board_cont").css({ 
@@ -56,15 +54,6 @@ app.controller('main',
       scope.current_lvl = scope.game.current_lvl;
 
       dynamic_sizing();
-      //var center = scope.game.getProblemCenter();
-      //var w = $('.port').width()
-      //var h = $('.port').height()
-      //var margin_l = (w/2)-center.x;
-      //var margin_t = (h/2)-center.y;
-      //$("#board").animate({ 
-        //marginLeft: margin_l,
-        //marginTop: margin_t
-      //}, 1000)
     }, 1500)
     scope.$digest();
   });

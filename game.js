@@ -95,7 +95,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 0;
+    this.current_lvl = 9;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -224,20 +224,18 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:7,
         type: 'dynamic',
         description: 'snapback',
-        target_group: {x:9, y:7},
+        target_group: {x:9, y:5},
         init_moves: [
-          //white moves
           {x: 8, y: 4, color: WGo.W},
           {x: 9, y: 4, color: WGo.W},
           {x: 6, y: 5, color: WGo.W},
           {x: 7, y: 5, color: WGo.W},
+          {x: 9, y: 5, color: WGo.B},
+          {x: 8, y: 5, color: WGo.B},
           {x: 10, y: 5, color: WGo.W},
           {x: 10, y: 6, color: WGo.W},
           {x: 9, y: 7, color: WGo.W},
 
-          //black moves 
-          {x: 9, y: 5, color: WGo.B},
-          {x: 8, y: 5, color: WGo.B},
           {x: 7, y: 6, color: WGo.B},
           {x: 7, y: 7, color: WGo.B},
           {x: 8, y: 7, color: WGo.B},
@@ -288,73 +286,87 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         id:9,
         type: 'dynamic',
         description: 'live by playing the vital point',
-        target_group: {x:7, y:5},
-        vital_point: {x:8, y:8},
+        target_group: {x:9, y:6},
+        vital_point: {x:9, y:8},
         init_moves: [
-          {x: 5, y: 4, color: WGo.W},
-          {x: 6, y: 4, color: WGo.W},
+          //top white
           {x: 7, y: 4, color: WGo.W},
           {x: 8, y: 4, color: WGo.W},
           {x: 9, y: 4, color: WGo.W},
           {x: 10, y: 4, color: WGo.W},
-
-          {x: 5, y: 5, color: WGo.W},
-          {x: 6, y: 5, color: WGo.B},
-          {x: 7, y: 5, color: WGo.B},
-          {x: 8, y: 5, color: WGo.B},
-          {x: 9, y: 5, color: WGo.B},
-          {x: 10, y: 5, color: WGo.W},
+          {x: 6, y: 5, color: WGo.W},
           {x: 11, y: 5, color: WGo.W},
+          {x: 12, y: 5, color: WGo.W},
 
-          {x: 4, y: 6, color: WGo.W},
-          {x: 5, y: 6, color: WGo.B},
+          //top black
           {x: 6, y: 6, color: WGo.B},
-          {x: 7, y: 6, color: WGo.W},
-          {x: 8, y: 6, color: WGo.W},
+          {x: 7, y: 6, color: WGo.B},
+          {x: 8, y: 6, color: WGo.B},
           {x: 9, y: 6, color: WGo.B},
           {x: 10, y: 6, color: WGo.B},
-          {x: 12, y: 6, color: WGo.W},
+          {x: 11, y: 6, color: WGo.B},
+          {x: 12, y: 6, color: WGo.B},
 
-          {x: 4, y: 7, color: WGo.W},
-          {x: 5, y: 7, color: WGo.B},
-          {x: 6, y: 7, color: WGo.W},
-          {x: 7, y: 7, color: WGo.W},
-          {x: 7, y: 7, color: WGo.W},
-          {x: 9, y: 7, color: WGo.W},
-          {x: 10, y: 7, color: WGo.B},
-          {x: 12, y: 7, color: WGo.W},
+          //b side
+          {y: 7, x: 6, color: WGo.B},
+          {y: 8, x: 6, color: WGo.B},
+          {y: 9, x: 6, color: WGo.B},
 
-          {x: 4, y: 8, color: WGo.W},
-          {x: 5, y: 8, color: WGo.B},
-          {x: 6, y: 8, color: WGo.W},
-          {x: 9, y: 8, color: WGo.W},
-          {x: 10, y: 8, color: WGo.B},
-          {x: 12, y: 8, color: WGo.W},
+          //b side
+          {y: 7, x: 12, color: WGo.B},
+          {y: 8, x: 12, color: WGo.B},
+          {y: 9, x: 12, color: WGo.B},
 
-          {x: 4, y: 9, color: WGo.W},
-          {x: 5, y: 9, color: WGo.B},
-          {x: 6, y: 9, color: WGo.B},
-          {x: 7, y: 9, color: WGo.W},
-          {x: 8, y: 9, color: WGo.W},
-          {x: 9, y: 9, color: WGo.W},
-          {x: 10, y: 9, color: WGo.B},
-          {x: 12, y: 9, color: WGo.W},
+          //w side
+          {y: 6, x: 5, color: WGo.W},
+          {y: 7, x: 5, color: WGo.W},
+          {y: 8, x: 5, color: WGo.W},
+          {y: 9, x: 5, color: WGo.W},
+          {y: 10, x: 5, color: WGo.W},
 
-          {x: 5, y: 10, color: WGo.W},
+          //w side
+          {y: 6, x: 13, color: WGo.W},
+          {y: 7, x: 13, color: WGo.W},
+          {y: 8, x: 13, color: WGo.W},
+          {y: 9, x: 13, color: WGo.W},
+          {y: 10, x: 13, color: WGo.W},
+
+          //bottom black
           {x: 6, y: 10, color: WGo.B},
           {x: 7, y: 10, color: WGo.B},
           {x: 8, y: 10, color: WGo.B},
           {x: 9, y: 10, color: WGo.B},
           {x: 10, y: 10, color: WGo.B},
-          {x: 11, y: 10, color: WGo.W},
+          {x: 11, y: 10, color: WGo.B},
+          {x: 12, y: 10, color: WGo.B},
 
-          {x: 5, y: 11, color: WGo.W},
+          //bottom white
           {x: 6, y: 11, color: WGo.W},
           {x: 7, y: 11, color: WGo.W},
           {x: 8, y: 11, color: WGo.W},
           {x: 9, y: 11, color: WGo.W},
           {x: 10, y: 11, color: WGo.W},
-        ]
+          {x: 11, y: 11, color: WGo.W},
+          {x: 12, y: 11, color: WGo.W},
+
+          //inside white top
+          {x: 7, y: 7, color: WGo.W},
+          {x: 8, y: 7, color: WGo.W},
+          {x: 9, y: 7, color: WGo.W},
+          {x: 10, y: 7, color: WGo.W},
+          {x: 11, y: 7, color: WGo.W},
+
+          //inside white top
+          {x: 7, y: 9, color: WGo.W},
+          {x: 8, y: 9, color: WGo.W},
+          {x: 9, y: 9, color: WGo.W},
+          {x: 10, y: 9, color: WGo.W},
+          {x: 11, y: 9, color: WGo.W},
+
+          //inside white sides
+          {x: 11, y: 8, color: WGo.W},
+          {x: 7, y: 8, color: WGo.W},
+]
       }
     ];
 
@@ -523,8 +535,9 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         //if opposite color just end the recurse
         return
       }
+
       //if already tested -- end recursion
-      if (tested.get(x,y) !== 0) {
+      if (tested.get(x,y) == true) {
         return
       }
 
@@ -550,6 +563,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
                   x,
                   y,
                   1);
+
     return libs;
   }
 
@@ -565,12 +579,18 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       } else {
         //if it has been... and its problem 9 -- capture white group
         if (cl.id == 9) {
-          if (this.game.isValid(cl.vital_point.x, cl.vital_point.y-1, WGo.B)) {
-            this.game.play(cl.vital_point.x, cl.vital_point.y-1, WGo.B);
-          } else if (this.game.isValid(cl.vital_point.x-1, cl.vital_point.y, WGo.B)) {
+          if (this.game.isValid(cl.vital_point.x-1, cl.vital_point.y, WGo.B)) {
             this.game.play(cl.vital_point.x-1, cl.vital_point.y, WGo.B);
-          }
-
+          } else if (this.game.isValid(cl.vital_point.x+1, cl.vital_point.y, WGo.B)) {
+            this.game.play(cl.vital_point.x+1, cl.vital_point.y, WGo.B);
+            //TODO make a better solution to this problem...
+          } else if (this.game.isValid(cl.vital_point.x+2, cl.vital_point.y, WGo.B)) {
+            this.game.play(cl.vital_point.x+2, cl.vital_point.y, WGo.B);
+          } else if (this.game.isValid(cl.vital_point.x-2, cl.vital_point.y, WGo.B)) {
+            this.game.play(cl.vital_point.x-2, cl.vital_point.y, WGo.B);
+          } else if (this.game.isValid(cl.vital_point.x, cl.vital_point.y+1, WGo.B)) {
+            this.game.play(cl.vital_point.x, cl.vital_point.y+1, WGo.B);
+          } 
         }
       }
 
@@ -578,6 +598,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       //reattach listener
       this.board.addEventListener('click', this.board._listener);
 
+      //don't keep playing....
       return;
     }
 
@@ -585,6 +606,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     var group = this.getCurrentLevel().target_group;
 
     var libs = this.getLiberties(group.x,group.y)
+    console.log(libs);
     //find the best liberty to play on...
     var potential_moves = [];
     angular.forEach(libs, function(lib) {
