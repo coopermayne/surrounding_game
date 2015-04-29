@@ -26,23 +26,17 @@
   <div ng-style="{'width': varvar}" class='progress'> &nbsp; </div>
 </div>
 
-<div id='container'>
+<h2 class="status_bar">Level: {{current_lvl}}</h1>
 
-  <div class="status_bar">
-    <h2>Level: {{current_lvl}}</h1>
+<div class="viewport">
+  <div class="fade">&nbsp</div>
+  <div class="board_cont">
+    <div id="board"></div>
   </div>
-
-  <div class="viewport">
-    <div class="fade">&nbsp</div>
-    <div class="board_cont">
-      <div id="board"></div>
-    </div>
-  </div>
-
-
-  <img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
-
 </div>
+
+
+<img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
 
 </body>
 

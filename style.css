@@ -1,8 +1,9 @@
+* {margin: 0 0; padding: 0 0}
+
 body {
   background: white;
   margin: 0 0;
 }
-
 
 .progress_cont {
   border-bottom: 1px solid #cccccc;
@@ -10,33 +11,26 @@ body {
 
 .progress {
   background: rgb(68,68,68);
-  height: 3px;
+  height: 7px;
 }
-
-#container {
-  margin: 0 auto;
-}
-
 
 .status_bar {
   width: 100%;
+  margin: 10px 20px;
   text-align: center;
   font-family: sans-serif, sans-serif;
   color: rgb(68,68,68);
 }
 
 .viewport {
+  margin: 0 auto;
   position: relative;
-  max-height: 500px;
-  height: 70%;
-  width: 100%;
   overflow: hidden;
 }
 
 .board_cont {
-  width: 700%;
   height: 700%;
-  margin: -100px -450px
+  width: 700%;
 }
 
 #board {
@@ -57,7 +51,7 @@ body {
 
 #restart_button{
   display: block;
-  margin-top: 40px;
+  margin-top: 20px;
   margin-left: auto;
   margin-right: auto
 }
