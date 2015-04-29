@@ -8,8 +8,7 @@
   <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="bower_components/jquery.transit/jquery.transit.js" type="text/javascript" charset="utf-8"></script>
   <script src="bower_components/underscore/underscore-min.js" type="text/javascript" charset="utf-8"></script>
-
-
+  <script src="bower_components/raphael/raphael.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="bower_components/wgo/wgo.player.css" type="text/css" media="all" />
 
   <script src="script.js" type="text/javascript" charset="utf-8"></script>
@@ -27,21 +26,17 @@
   <div ng-style="{'width': varvar}" class='progress'> &nbsp; </div>
 </div>
 
-<div class='container'>
+<h2 class="status_bar">Level: {{current_lvl}}</h1>
 
-  <div class="status_bar">
-    <h2>Level: {{current_lvl}}</h1>
+<div class="viewport">
+  <div class="fade">&nbsp</div>
+  <div class="board_cont">
+    <div id="board"></div>
   </div>
-
-
-  <div class="viewport">
-    <div id="testy" class="port">&nbsp</div>
-    <div id="board"> </div>
-  </div>
-
-
-  <img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
 </div>
+
+
+<img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
 
 </body>
 

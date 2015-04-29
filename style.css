@@ -1,11 +1,8 @@
+* {margin: 0 0; padding: 0 0}
+
 body {
   background: white;
   margin: 0 0;
-}
-
-.container {
-  width: 600px;
-  margin: 0 auto;
 }
 
 .progress_cont {
@@ -19,28 +16,33 @@ body {
 
 .status_bar {
   width: 100%;
-  height: 50px;
+  margin: 10px 20px;
   text-align: center;
   font-family: sans-serif, sans-serif;
   color: rgb(68,68,68);
 }
 
-.wgo-board {
-  margin-left: 0;
-}
-
 .viewport {
+  margin: 0 auto;
   position: relative;
-  width:100%;
-  height: 450px;
   overflow: hidden;
 }
 
-.port {
+.board_cont {
+  height: 550%;
+  width: 550%;
+}
+
+#board {
+  height: 100%;
+  width: 100%;
+}
+
+.fade {
   position: absolute;
   pointer-events:none;
   z-index: 500;
-  height:450px;
+  height:100%;
   width: 100%;
   /*-webkit-box-shadow: inset 0px 0px 57px 36px rgba(255,255,255,1);*/
   /*-moz-box-shadow: inset 0px 0px 57px 36px rgba(255,255,255,1);*/
