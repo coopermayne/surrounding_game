@@ -103,7 +103,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     //instantiate a new game
     console.log('game instantiated');
 
-    this.current_lvl = 6;
+    this.current_lvl = 0;
 
     //make a new game object
     this.game = new WGo.Game(62);
