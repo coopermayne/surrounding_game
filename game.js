@@ -2,7 +2,7 @@ app.factory('Board', function() {
   var Board = function(config) {
 
     /*store all objects on board*/
-    this.objects = [];
+    this.objects = new WGo.Position(config.size)
 
     //store listeners for removal or reattachment
     this.l = null;
@@ -13,13 +13,17 @@ app.factory('Board', function() {
     this.w = 1000;
     this.h = 1000;
     this.size = config.size;  
-    this.line_width=0.5;
     this.el = config.element;
-    this.paper = new Raphael(config.element);
+    this.line_width=0.5;
+
+    this.createCanvas();
+    this.drawLines();
+  }
+
+  Board.prototype.createCanvas = function() {
+    this.paper = new Raphael(this.el);
     this.paper.setViewBox(0,0,this.w,this.h,true);
     this.paper.setSize('100%', '100%');
-
-    this.drawLines();
   }
 
   Board.prototype.drawLines = function() {
@@ -52,15 +56,25 @@ app.factory('Board', function() {
     var radius = this.w/(this.size + 2);
     radius = radius/2
     var obj = this.paper.circle(this.getX(params.x), this.getY(params.y), radius).attr({'stroke-width':this.line_width,fill: color});
-    this.objects.push(obj);
+
+
+    this.objects.set(params.x, params.y, obj);
+
   }
 
   Board.prototype.removeAllObjects = function() {
-    this.objects
-    angular.forEach(this.objects, function(object, key) {
-      object.remove();
+    angular.forEach(this.objects.schema, function(object, key) {
+      if(object) object.remove();
     })
-    this.objects = [];
+    this.objects.clear();
+  }
+
+  Board.prototype.removeObject = function(params) {
+    /*pararms = {x: xval, y: yval}*/
+    //fade out captures
+    var obj = this.objects.get(params.x,params.y)
+    obj.animate({ opacity : 0 }, 750, function () { this.remove() });
+    this.objects.set(params.x,params.y,0);
   }
 
   Board.prototype.addEventListener = function(type, callback) {
@@ -100,7 +114,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
   var Game = function(config) {
     //instantiate a new game
 
-    this.current_lvl = 0;
+    this.current_lvl = 4;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -558,51 +572,69 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     this.board.addEventListener('click', this.board.listener);
   }
 
-  Game.prototype.clickListener= function(x,y,z) {
-
-    var sound = new Howl({
-      urls: ['play.wav'],
-      volume: 0.1
-    }).play();
-
-    var board = this.board;
-    var game = this.game;
-
+  Game.prototype.play = function(x,y,c) {
+    if (c==WGo.B) {
+      var type = 'black'
+    } else {
+      var type = 'white'
+    }
     //handle invalid moves
-    if (!game.isValid(x,y, WGo.W)) {
+    if (!this.game.isValid(x,y,c)) {
+      console.log('invalid');
       return false
     }
 
-    //remove any captured stones from the board
-    var captures = game.play(x,y, WGo.W);
-    this.setUpPosition()
+    var caps = this.game.play(x,y,c)
+    this.board.addObject({ x:x,y:y, type:type });
 
-    //lvl 0 win -- just play....
+    var _this = this
+    _.each(caps, function(cap,index) {
+      _this.board.removeObject(cap)
+    })
+
+    //play sound
+    //var sound = new Howl({
+      //urls: ['play.wav'],
+      //volume: 0.1
+    //}).play();
+  }
+
+  Game.prototype.beat_level = function() {
+    //lvl 0 
     if (this.getCurrentLevel().id==0) {
       this.current_lvl +=1
       board.removeEventListener("click", board.listener);
       //
-      //inform the scope
-      console.log('BROADCAST: game won');
-      rootScope.$broadcast('win');
-      return;
+      return true
     }
-    //check if you won
-    var target_group = this.getCurrentLevel().target_group;
 
+    var target_group = this.getCurrentLevel().target_group;
+    //lvl 1-10
     //if player captured the target group they win lvl
-    if (game.getStone(target_group.x, target_group.y) == 0) {
-      board.removeEventListener("click", board.listener);
+    if (this.game.getStone(target_group.x, target_group.y) == 0) {
+      this.board.removeEventListener("click", this.board.listener);
       //go to next lvl
       this.current_lvl += 1;
 
-      //inform the scope
+      return true
+    } else {
+      return false;
+    }
+  }
+
+  Game.prototype.clickListener= function(x,y,z) {
+
+    var board = this.board;
+    var game = this.game;
+
+    //play and remove any captured stones from the board
+    this.play(x,y,WGo.W);
+
+    //check if the move won
+    if (this.beat_level()) {
       console.log('BROADCAST: game won');
       rootScope.$broadcast('win');
-      return;
-    }
-
-    if (this.getCurrentLevel().type == 'dynamic') {
+    } else if (this.getCurrentLevel().type == 'dynamic') {
       //if its a problem that needs and answer...
       //prevent further moves and tell scope whats happening 
 
@@ -612,7 +644,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 
       console.log('BROADCAST: AI turn');
       rootScope.$broadcast('ai_turn');
-      return;
     }
   }
 
@@ -665,10 +696,11 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
   Game.prototype.aiRespond = function() {
     //make a smart move and put event listener back on
 
+    //logic for problem 9 and 10
     if (this.getCurrentLevel().vital_point) {
       var cl = this.getCurrentLevel();
       
-      //TODO cleaner logic for lvls 8 and 9
+      //TODO cleaner logic for lvls 9 and 10
       if (this.game.isValid(cl.vital_point.x, cl.vital_point.y, WGo.B)) {
       //if vital point hasn't been played play it...
         this.game.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
@@ -690,7 +722,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
         } else if (cl.id == 9) {
         //if it has been and its problem 8
           var l = this.getLiberties(cl.target_group.x, cl.target_group.y)
-          console.log('blarg');
           if (this.game.getStone(cl.target_group.x,cl.target_group.y) == 1) {
             if (l.length<2) {
               this.game.play(l[0].x, l[0].y, WGo.B)
@@ -700,6 +731,11 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       }
 
       this.setUpPosition();
+      //var sound = new Howl({
+        //urls: ['play.wav'],
+        //volume: 0.1
+      //}).play();
+
       //reattach listener
       this.board.addEventListener('click', this.board._listener);
 
@@ -707,6 +743,16 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       return;
     }
 
+
+    var best_move = this.find_best_move();
+
+    this.play(best_move.x,best_move.y, WGo.B);
+
+    //reattach listener
+    this.board.addEventListener('click', this.board._listener);
+  }
+
+  Game.prototype.find_best_move = function() {
     var self = this
     var group = this.getCurrentLevel().target_group;
 
@@ -715,27 +761,26 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     var potential_moves = [];
     angular.forEach(libs, function(lib) {
       //play here and examine group... record how many libs you have...
-      self.game.play(lib.x, lib.y, WGo.B);
+      var caps = self.game.play(lib.x, lib.y, WGo.B);
       var libs_n = self.getLiberties(group.x, group.y);
       potential_moves.push({move: lib, libs: libs_n.length});
 
       //then remove the stone
       self.game.removeStone(lib.x, lib.y);
+      angular.forEach(caps, function(cap) {
+        self.game.addStone(cap.x, cap.y, WGo.W)
+      })
     });
     potential_moves = _.sortBy(potential_moves, 'libs');
     potential_moves.reverse();
     //don't play self atari
     if (potential_moves[0].libs<1) {
+      console.log('self atari');
     }
-
-    //play for maximum liberty extension
-    var lx = potential_moves[0].move.x
-    var ly = potential_moves[0].move.y
-    this.game.play(lx, ly, WGo.B)
-    this.setUpPosition();
-
-    //reattach listener
-    this.board.addEventListener('click', this.board._listener);
+    var best_move = {};
+    best_move.x = potential_moves[0].move.x;
+    best_move.y = potential_moves[0].move.y;
+    return best_move;
   }
 
   Game.prototype.nextProblem = function() {
