@@ -114,7 +114,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
   var Game = function(config) {
     //instantiate a new game
 
-    this.current_lvl = 9;
+    this.current_lvl = 0;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -526,7 +526,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     }
   }
 
-
   Game.prototype.setUpPosition = function() {
     this.board.removeAllObjects();
     var schema = this.game.position.schema;
@@ -593,23 +592,24 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     })
 
     //play sound
-    //var sound = new Howl({
-      //urls: ['play.wav'],
-      //volume: 0.1
-    //}).play();
+    var sound = new Howl({
+      urls: ['play.wav'],
+      volume: 0.1
+    }).play();
   }
 
   Game.prototype.beat_level = function() {
     //lvl 0 
     if (this.getCurrentLevel().id==0) {
       this.current_lvl +=1
-      board.removeEventListener("click", board.listener);
+      this.board.removeEventListener("click", board.listener);
       //
       return true
     }
 
-    var target_group = this.getCurrentLevel().target_group;
     //lvl 1-10
+
+    var target_group = this.getCurrentLevel().target_group;
     //if player captured the target group they win lvl
     if (this.game.getStone(target_group.x, target_group.y) == 0) {
       this.board.removeEventListener("click", this.board.listener);
