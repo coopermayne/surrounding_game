@@ -114,7 +114,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
   var Game = function(config) {
     //instantiate a new game
 
-    this.current_lvl = 4;
+    this.current_lvl = 9;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -703,38 +703,32 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       //TODO cleaner logic for lvls 9 and 10
       if (this.game.isValid(cl.vital_point.x, cl.vital_point.y, WGo.B)) {
       //if vital point hasn't been played play it...
-        this.game.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
+        this.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
       } else {
         //if it has been... and its problem 9 -- capture white group
         if (cl.id == 10) {
           if (this.game.isValid(cl.vital_point.x-1, cl.vital_point.y, WGo.B)) {
-            this.game.play(cl.vital_point.x-1, cl.vital_point.y, WGo.B);
+            this.play(cl.vital_point.x-1, cl.vital_point.y, WGo.B);
           } else if (this.game.isValid(cl.vital_point.x+1, cl.vital_point.y, WGo.B)) {
-            this.game.play(cl.vital_point.x+1, cl.vital_point.y, WGo.B);
+            this.play(cl.vital_point.x+1, cl.vital_point.y, WGo.B);
             //TODO make a better solution to this problem...
           } else if (this.game.isValid(cl.vital_point.x+2, cl.vital_point.y, WGo.B)) {
-            this.game.play(cl.vital_point.x+2, cl.vital_point.y, WGo.B);
+            this.play(cl.vital_point.x+2, cl.vital_point.y, WGo.B);
           } else if (this.game.isValid(cl.vital_point.x-2, cl.vital_point.y, WGo.B)) {
-            this.game.play(cl.vital_point.x-2, cl.vital_point.y, WGo.B);
+            this.play(cl.vital_point.x-2, cl.vital_point.y, WGo.B);
           } else if (this.game.isValid(cl.vital_point.x, cl.vital_point.y+1, WGo.B)) {
-            this.game.play(cl.vital_point.x, cl.vital_point.y+1, WGo.B);
+            this.play(cl.vital_point.x, cl.vital_point.y+1, WGo.B);
           } 
         } else if (cl.id == 9) {
         //if it has been and its problem 8
           var l = this.getLiberties(cl.target_group.x, cl.target_group.y)
           if (this.game.getStone(cl.target_group.x,cl.target_group.y) == 1) {
             if (l.length<2) {
-              this.game.play(l[0].x, l[0].y, WGo.B)
+              this.play(l[0].x, l[0].y, WGo.B)
             }
           }
         }
       }
-
-      this.setUpPosition();
-      //var sound = new Howl({
-        //urls: ['play.wav'],
-        //volume: 0.1
-      //}).play();
 
       //reattach listener
       this.board.addEventListener('click', this.board._listener);
@@ -742,11 +736,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       //don't keep playing....
       return;
     }
-
-
-    var best_move = this.find_best_move();
-
-    this.play(best_move.x,best_move.y, WGo.B);
+    if (this.getCurrentLevel().vital_point) {
+      this.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
+    } else {
+      var best_move = this.find_best_move();
+      this.play(best_move.x,best_move.y, WGo.B);
+    }
 
     //reattach listener
     this.board.addEventListener('click', this.board._listener);
