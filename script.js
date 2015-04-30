@@ -11,8 +11,11 @@ app.controller('main',
     //this function sizes everything correctly 
     var sum = $('.progress_cont').height() + $('#restart_button').height() + $('.status_bar').height();
     var win = window.innerHeight;
-    $('.viewport').height(win-sum-70);
-    $('.viewport').width(win-sum-70);
+    var height = win-sum-70;
+    height = Math.max(height, 400)
+    height = Math.min(height, 900)
+    $('.viewport').height(height);
+    $('.viewport').width(height);
     $(".board_cont").css({ 
       marginLeft: determine_margin().left,
       marginTop: determine_margin().up 
