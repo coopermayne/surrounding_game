@@ -111,10 +111,335 @@ app.factory('Board', function() {
   return Board;
 });
 
-app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootScope, Board) {
+app.factory('Levels', function() {
+  return [
+    {
+    id:0,
+    type: 'play',
+    description: 'capture one stone',
+    center_coord: {x:9, y:5},
+    init_moves: [
+    ]
+  },
+  {
+    id:1,
+    type: 'static',
+    description: 'capture one stone',
+    center_coord: {x:9, y:5},
+    target_group: {x:9, y:5},
+    init_moves: [
+      {x: 9, y: 5, color: WGo.B},
+
+      {x: 9, y: 4, color: WGo.W},
+      {x: 9, y: 6, color: WGo.W},
+      {x: 8, y: 5, color: WGo.W}
+    ]
+  },
+  {
+    id:2,
+    type: 'static',
+    description: 'capture two stones',
+    center_coord: {x:9, y:5},
+    target_group: {x:9, y:5},
+    init_moves: [
+      {x: 9, y: 6, color: WGo.B},
+      {x: 9, y: 5, color: WGo.B},
+
+      {x: 9, y: 4, color: WGo.W},
+      {x: 9, y: 7, color: WGo.W},
+      {x: 8, y: 5, color: WGo.W},
+      {x: 8, y: 6, color: WGo.W},
+
+      {x: 10, y: 5, color: WGo.W},
+    ]
+  },
+  {
+    id:3,
+    type: 'static',
+    description: 'capture three stones',
+    center_coord: {x:10, y:6},
+    target_group: {x:9, y:6},
+    init_moves: [
+      {x: 10, y: 3, color: WGo.W},
+      {x: 11, y: 3, color: WGo.W},
+      {x: 12, y: 4, color: WGo.W},
+      {x: 12, y: 5, color: WGo.W},
+      {x: 12, y: 6, color: WGo.W},
+      {x: 10, y: 7, color: WGo.W},
+      {x: 11, y: 7, color: WGo.W},
+      {x: 9, y: 8, color: WGo.W},
+      {x: 9, y: 4, color: WGo.W},
+      {x: 9, y: 5, color: WGo.W},
+      {x: 8, y: 6, color: WGo.W},
+      {x: 8, y: 7, color: WGo.W},
+
+      {x: 10, y: 4, color: WGo.B},
+      {x: 11, y: 4, color: WGo.B},
+      {x: 11, y: 5, color: WGo.B},
+      {x: 9, y: 6, color: WGo.B},
+      {x: 10, y: 6, color: WGo.B},
+      {x: 11, y: 6, color: WGo.B},
+      {x: 9, y: 7, color: WGo.B},
+    ]
+  },
+  {
+    id:4,
+    type: 'dynamic',
+    center_coord: {x:9, y:6},
+    target_group: {x:8, y:7},
+    description: 'capture using ladder',
+    init_moves: [
+      //ladder breaker
+      {x: 10, y:5, color: WGo.W},
+
+      {x: 7, y: 6, color: WGo.W},
+      {x: 7, y: 7, color: WGo.W},
+      {x: 8, y:8, color: WGo.W},
+      {x: 8, y: 7, color: WGo.B},
+    ]
+  },
+  {
+    id:5,
+    type: 'dynamic',
+    center_coord: {x:9, y:6},
+    target_group: {x: 8, y:7},
+    description: 'capture using net',
+    init_moves: [
+      {x: 7, y: 6, color: WGo.W},
+      {x: 7, y: 7, color: WGo.W},
+      {x: 8, y:8, color: WGo.W},
+      {x: 9, y:8, color: WGo.W},
+      {x: 8, y: 7, color: WGo.B},
+      {x: 10, y: 5, color: WGo.B},
+    ]
+  },
+  {
+    id:6,
+    type: 'static',
+    description: 'capture group with one eye',
+    center_coord: {x:9, y:5},
+    target_group: {x:9, y:5},
+    init_moves: [
+      {x: 9, y: 4, color: WGo.W},
+      {x: 8, y: 4, color: WGo.W},
+      {x: 10, y: 4, color: WGo.W},
+      {x: 9, y: 5, color: WGo.B},
+      {x: 8, y: 5, color: WGo.B},
+      {x: 10, y: 5, color: WGo.B},
+      {x: 8, y: 6, color: WGo.B},
+      {x: 10, y: 6, color: WGo.B},
+      {x: 9, y: 7, color: WGo.B},
+      {x: 8, y: 7, color: WGo.B},
+      {x: 10, y: 7, color: WGo.B},
+      {x: 9, y: 8, color: WGo.W},
+      {x: 8, y: 8, color: WGo.W},
+      {x: 10, y: 8, color: WGo.W},
+
+
+      {x: 7, y: 5, color: WGo.W},
+      {x: 7, y: 6, color: WGo.W},
+      {x: 7, y: 7, color: WGo.W},
+
+      {x: 11, y: 5, color: WGo.W},
+      {x: 11, y: 6, color: WGo.W},
+      {x: 11, y: 7, color: WGo.W},
+    ]
+  },
+  {
+    id:7,
+    type: 'dynamic',
+    description: 'capture group with big eye',
+    center_coord: {x:8, y:6},
+    target_group: {x:9, y:7},
+    init_moves: [
+      //black stones
+      {x: 7, y: 7, color: WGo.B},
+      {x: 8, y: 7, color: WGo.B},
+      {x: 9, y: 7, color: WGo.B},
+      {x: 10, y: 7, color: WGo.B},
+      {x: 7, y: 5, color: WGo.B},
+      {x: 8, y: 5, color: WGo.B},
+      {x: 9, y: 5, color: WGo.B},
+      {x: 10, y: 5, color: WGo.B},
+      {x: 7, y: 6, color: WGo.B},
+      {x: 10, y: 6, color: WGo.B},
+
+      //white stones
+      {x: 11, y: 5, color: WGo.W},
+      {x: 11, y: 6, color: WGo.W},
+      {x: 11, y: 7, color: WGo.W},
+      {x: 6, y: 5, color: WGo.W},
+      {x: 6, y: 6, color: WGo.W},
+      {x: 6, y: 7, color: WGo.W},
+
+      {x: 7, y: 8, color: WGo.W},
+      {x: 8, y: 8, color: WGo.W},
+      {x: 9, y: 8, color: WGo.W},
+      {x: 10, y: 8, color: WGo.W},
+
+      {x: 7, y: 4, color: WGo.W},
+      {x: 8, y: 4, color: WGo.W},
+      {x: 9, y: 4, color: WGo.W},
+      {x: 10, y: 4, color: WGo.W},
+    ]
+  },
+  {
+    id:8,
+    type: 'dynamic',
+    description: 'snapback',
+    center_coord: {x:8, y:6},
+    target_group: {x:9, y:5},
+    init_moves: [
+      {x: 8, y: 4, color: WGo.W},
+      {x: 9, y: 4, color: WGo.W},
+      {x: 6, y: 5, color: WGo.W},
+      {x: 7, y: 5, color: WGo.W},
+      {x: 9, y: 5, color: WGo.B},
+      {x: 8, y: 5, color: WGo.B},
+      {x: 10, y: 5, color: WGo.W},
+      {x: 10, y: 6, color: WGo.W},
+      {x: 9, y: 7, color: WGo.W},
+
+      {x: 7, y: 6, color: WGo.B},
+      {x: 7, y: 7, color: WGo.B},
+      {x: 8, y: 7, color: WGo.B},
+      {x: 8, y: 8, color: WGo.B},
+    ]
+  },
+  {
+    id:9,
+    type: 'dynamic',
+    description: 'kill by playing vital point',
+    center_coord: {x:7, y:7},
+    target_group: {x:6, y:9},
+    vital_point: {x:8, y:8},
+    init_moves: [
+      {x: 6, y: 10, color: WGo.W},
+      {x: 7, y: 10, color: WGo.W},
+      {x: 8, y: 10, color: WGo.W},
+      {x: 9, y: 10, color: WGo.W},
+
+      {x: 5, y: 9, color: WGo.W},
+      {x: 6, y: 9, color: WGo.B},
+      {x: 7, y: 9, color: WGo.B},
+      {x: 8, y: 9, color: WGo.B},
+      {x: 9, y: 9, color: WGo.B},
+      {x: 10, y: 9, color: WGo.W},
+
+      {x: 5, y: 8, color: WGo.W},
+      {x: 6, y: 8, color: WGo.B},
+      {x: 9, y: 8, color: WGo.B},
+      {x: 10, y: 8, color: WGo.W},
+
+      {x: 5, y: 7, color: WGo.W},
+      {x: 6, y: 7, color: WGo.B},
+      {x: 7, y: 7, color: WGo.B},
+      {x: 7, y: 7, color: WGo.B},
+      {x: 9, y: 7, color: WGo.B},
+      {x: 10, y: 7, color: WGo.W},
+
+      {x: 6, y: 6, color: WGo.W},
+      {x: 7, y: 6, color: WGo.B},
+      {x: 8, y: 6, color: WGo.B},
+      {x: 9, y: 6, color: WGo.W},
+
+      {x: 7, y: 5, color: WGo.W},
+      {x: 8, y: 5, color: WGo.W},
+    ]
+  },
+  {
+    id:10,
+    type: 'dynamic',
+    description: 'live by playing the vital point',
+    center_coord: {x:9, y:7},
+    target_group: {x:9, y:6},
+    vital_point: {x:9, y:8},
+    init_moves: [
+      //top white
+      {x: 7, y: 4, color: WGo.W},
+      {x: 8, y: 4, color: WGo.W},
+      {x: 9, y: 4, color: WGo.W},
+      {x: 10, y: 4, color: WGo.W},
+      {x: 6, y: 5, color: WGo.W},
+      {x: 11, y: 5, color: WGo.W},
+      {x: 12, y: 5, color: WGo.W},
+
+      //top black
+      {x: 6, y: 6, color: WGo.B},
+      {x: 7, y: 6, color: WGo.B},
+      {x: 8, y: 6, color: WGo.B},
+      {x: 9, y: 6, color: WGo.B},
+      {x: 10, y: 6, color: WGo.B},
+      {x: 11, y: 6, color: WGo.B},
+      {x: 12, y: 6, color: WGo.B},
+
+      //b side
+      {y: 7, x: 6, color: WGo.B},
+      {y: 8, x: 6, color: WGo.B},
+      {y: 9, x: 6, color: WGo.B},
+
+      //b side
+      {y: 7, x: 12, color: WGo.B},
+      {y: 8, x: 12, color: WGo.B},
+      {y: 9, x: 12, color: WGo.B},
+
+      //w side
+      {y: 6, x: 5, color: WGo.W},
+      {y: 7, x: 5, color: WGo.W},
+      {y: 8, x: 5, color: WGo.W},
+      {y: 9, x: 5, color: WGo.W},
+      {y: 10, x: 5, color: WGo.W},
+
+      //w side
+      {y: 6, x: 13, color: WGo.W},
+      {y: 7, x: 13, color: WGo.W},
+      {y: 8, x: 13, color: WGo.W},
+      {y: 9, x: 13, color: WGo.W},
+      {y: 10, x: 13, color: WGo.W},
+
+      //bottom black
+      {x: 6, y: 10, color: WGo.B},
+      {x: 7, y: 10, color: WGo.B},
+      {x: 8, y: 10, color: WGo.B},
+      {x: 9, y: 10, color: WGo.B},
+      {x: 10, y: 10, color: WGo.B},
+      {x: 11, y: 10, color: WGo.B},
+      {x: 12, y: 10, color: WGo.B},
+
+      //bottom white
+      {x: 6, y: 11, color: WGo.W},
+      {x: 7, y: 11, color: WGo.W},
+      {x: 8, y: 11, color: WGo.W},
+      {x: 9, y: 11, color: WGo.W},
+      {x: 10, y: 11, color: WGo.W},
+      {x: 11, y: 11, color: WGo.W},
+      {x: 12, y: 11, color: WGo.W},
+
+      //inside white top
+      {x: 7, y: 7, color: WGo.W},
+      {x: 8, y: 7, color: WGo.W},
+      {x: 9, y: 7, color: WGo.W},
+      {x: 10, y: 7, color: WGo.W},
+      {x: 11, y: 7, color: WGo.W},
+
+      //inside white top
+      {x: 7, y: 9, color: WGo.W},
+      {x: 8, y: 9, color: WGo.W},
+      {x: 9, y: 9, color: WGo.W},
+      {x: 10, y: 9, color: WGo.W},
+      {x: 11, y: 9, color: WGo.W},
+
+      //inside white sides
+      {x: 11, y: 8, color: WGo.W},
+      {x: 7, y: 8, color: WGo.W},
+    ]
+  }
+  ]
+})
+
+app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeout, rootScope, Board, Levels) {
   var Game = function(config) {
     //instantiate a new game
-
     this.current_lvl = 9;
 
     //make a new game object
@@ -126,332 +451,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
       element: config.element,
     })
 
-    this.levels = [
-      {
-      id:0,
-      type: 'play',
-      description: 'capture one stone',
-      center_coord: {x:9, y:5},
-      init_moves: [
-      ]
-      },
-      {
-        id:1,
-        type: 'static',
-        description: 'capture one stone',
-        center_coord: {x:9, y:5},
-        target_group: {x:9, y:5},
-        init_moves: [
-          {x: 9, y: 5, color: WGo.B},
-
-          {x: 9, y: 4, color: WGo.W},
-          {x: 9, y: 6, color: WGo.W},
-          {x: 8, y: 5, color: WGo.W}
-        ]
-      },
-      {
-        id:2,
-        type: 'static',
-        description: 'capture two stones',
-        center_coord: {x:9, y:5},
-        target_group: {x:9, y:5},
-        init_moves: [
-          {x: 9, y: 6, color: WGo.B},
-          {x: 9, y: 5, color: WGo.B},
-
-          {x: 9, y: 4, color: WGo.W},
-          {x: 9, y: 7, color: WGo.W},
-          {x: 8, y: 5, color: WGo.W},
-          {x: 8, y: 6, color: WGo.W},
-
-          {x: 10, y: 5, color: WGo.W},
-        ]
-      },
-      {
-        id:3,
-        type: 'static',
-        description: 'capture three stones',
-        center_coord: {x:10, y:6},
-        target_group: {x:9, y:6},
-        init_moves: [
-          {x: 10, y: 3, color: WGo.W},
-          {x: 11, y: 3, color: WGo.W},
-          {x: 12, y: 4, color: WGo.W},
-          {x: 12, y: 5, color: WGo.W},
-          {x: 12, y: 6, color: WGo.W},
-          {x: 10, y: 7, color: WGo.W},
-          {x: 11, y: 7, color: WGo.W},
-          {x: 9, y: 8, color: WGo.W},
-          {x: 9, y: 4, color: WGo.W},
-          {x: 9, y: 5, color: WGo.W},
-          {x: 8, y: 6, color: WGo.W},
-          {x: 8, y: 7, color: WGo.W},
-
-          {x: 10, y: 4, color: WGo.B},
-          {x: 11, y: 4, color: WGo.B},
-          {x: 11, y: 5, color: WGo.B},
-          {x: 9, y: 6, color: WGo.B},
-          {x: 10, y: 6, color: WGo.B},
-          {x: 11, y: 6, color: WGo.B},
-          {x: 9, y: 7, color: WGo.B},
-        ]
-      },
-      {
-        id:4,
-        type: 'dynamic',
-        center_coord: {x:9, y:6},
-        target_group: {x:8, y:7},
-        description: 'capture using ladder',
-        init_moves: [
-          //ladder breaker
-          {x: 10, y:5, color: WGo.W},
-
-          {x: 7, y: 6, color: WGo.W},
-          {x: 7, y: 7, color: WGo.W},
-          {x: 8, y:8, color: WGo.W},
-          {x: 8, y: 7, color: WGo.B},
-        ]
-      },
-      {
-        id:5,
-        type: 'dynamic',
-        center_coord: {x:9, y:6},
-        target_group: {x: 8, y:7},
-        description: 'capture using net',
-        init_moves: [
-          {x: 7, y: 6, color: WGo.W},
-          {x: 7, y: 7, color: WGo.W},
-          {x: 8, y:8, color: WGo.W},
-          {x: 9, y:8, color: WGo.W},
-          {x: 8, y: 7, color: WGo.B},
-          {x: 10, y: 5, color: WGo.B},
-        ]
-      },
-      {
-        id:6,
-        type: 'static',
-        description: 'capture group with one eye',
-        center_coord: {x:9, y:5},
-        target_group: {x:9, y:5},
-        init_moves: [
-          {x: 9, y: 4, color: WGo.W},
-          {x: 8, y: 4, color: WGo.W},
-          {x: 10, y: 4, color: WGo.W},
-          {x: 9, y: 5, color: WGo.B},
-          {x: 8, y: 5, color: WGo.B},
-          {x: 10, y: 5, color: WGo.B},
-          {x: 8, y: 6, color: WGo.B},
-          {x: 10, y: 6, color: WGo.B},
-          {x: 9, y: 7, color: WGo.B},
-          {x: 8, y: 7, color: WGo.B},
-          {x: 10, y: 7, color: WGo.B},
-          {x: 9, y: 8, color: WGo.W},
-          {x: 8, y: 8, color: WGo.W},
-          {x: 10, y: 8, color: WGo.W},
-
-
-          {x: 7, y: 5, color: WGo.W},
-          {x: 7, y: 6, color: WGo.W},
-          {x: 7, y: 7, color: WGo.W},
-
-          {x: 11, y: 5, color: WGo.W},
-          {x: 11, y: 6, color: WGo.W},
-          {x: 11, y: 7, color: WGo.W},
-        ]
-      },
-      {
-        id:7,
-        type: 'dynamic',
-        description: 'capture group with big eye',
-        center_coord: {x:8, y:6},
-        target_group: {x:9, y:7},
-        init_moves: [
-          //black stones
-          {x: 7, y: 7, color: WGo.B},
-          {x: 8, y: 7, color: WGo.B},
-          {x: 9, y: 7, color: WGo.B},
-          {x: 10, y: 7, color: WGo.B},
-          {x: 7, y: 5, color: WGo.B},
-          {x: 8, y: 5, color: WGo.B},
-          {x: 9, y: 5, color: WGo.B},
-          {x: 10, y: 5, color: WGo.B},
-          {x: 7, y: 6, color: WGo.B},
-          {x: 10, y: 6, color: WGo.B},
-
-          //white stones
-          {x: 11, y: 5, color: WGo.W},
-          {x: 11, y: 6, color: WGo.W},
-          {x: 11, y: 7, color: WGo.W},
-          {x: 6, y: 5, color: WGo.W},
-          {x: 6, y: 6, color: WGo.W},
-          {x: 6, y: 7, color: WGo.W},
-
-          {x: 7, y: 8, color: WGo.W},
-          {x: 8, y: 8, color: WGo.W},
-          {x: 9, y: 8, color: WGo.W},
-          {x: 10, y: 8, color: WGo.W},
-
-          {x: 7, y: 4, color: WGo.W},
-          {x: 8, y: 4, color: WGo.W},
-          {x: 9, y: 4, color: WGo.W},
-          {x: 10, y: 4, color: WGo.W},
-        ]
-      },
-      {
-        id:8,
-        type: 'dynamic',
-        description: 'snapback',
-        center_coord: {x:8, y:6},
-        target_group: {x:9, y:5},
-        init_moves: [
-          {x: 8, y: 4, color: WGo.W},
-          {x: 9, y: 4, color: WGo.W},
-          {x: 6, y: 5, color: WGo.W},
-          {x: 7, y: 5, color: WGo.W},
-          {x: 9, y: 5, color: WGo.B},
-          {x: 8, y: 5, color: WGo.B},
-          {x: 10, y: 5, color: WGo.W},
-          {x: 10, y: 6, color: WGo.W},
-          {x: 9, y: 7, color: WGo.W},
-
-          {x: 7, y: 6, color: WGo.B},
-          {x: 7, y: 7, color: WGo.B},
-          {x: 8, y: 7, color: WGo.B},
-          {x: 8, y: 8, color: WGo.B},
-        ]
-      },
-      {
-        id:9,
-        type: 'dynamic',
-        description: 'kill by playing vital point',
-        center_coord: {x:7, y:7},
-        target_group: {x:6, y:9},
-        vital_point: {x:8, y:8},
-        init_moves: [
-          {x: 6, y: 10, color: WGo.W},
-          {x: 7, y: 10, color: WGo.W},
-          {x: 8, y: 10, color: WGo.W},
-          {x: 9, y: 10, color: WGo.W},
-
-          {x: 5, y: 9, color: WGo.W},
-          {x: 6, y: 9, color: WGo.B},
-          {x: 7, y: 9, color: WGo.B},
-          {x: 8, y: 9, color: WGo.B},
-          {x: 9, y: 9, color: WGo.B},
-          {x: 10, y: 9, color: WGo.W},
-
-          {x: 5, y: 8, color: WGo.W},
-          {x: 6, y: 8, color: WGo.B},
-          {x: 9, y: 8, color: WGo.B},
-          {x: 10, y: 8, color: WGo.W},
-
-          {x: 5, y: 7, color: WGo.W},
-          {x: 6, y: 7, color: WGo.B},
-          {x: 7, y: 7, color: WGo.B},
-          {x: 7, y: 7, color: WGo.B},
-          {x: 9, y: 7, color: WGo.B},
-          {x: 10, y: 7, color: WGo.W},
-
-          {x: 6, y: 6, color: WGo.W},
-          {x: 7, y: 6, color: WGo.B},
-          {x: 8, y: 6, color: WGo.B},
-          {x: 9, y: 6, color: WGo.W},
-
-          {x: 7, y: 5, color: WGo.W},
-          {x: 8, y: 5, color: WGo.W},
-        ]
-      },
-      {
-        id:10,
-        type: 'dynamic',
-        description: 'live by playing the vital point',
-        center_coord: {x:9, y:7},
-        target_group: {x:9, y:6},
-        vital_point: {x:9, y:8},
-        init_moves: [
-          //top white
-          {x: 7, y: 4, color: WGo.W},
-          {x: 8, y: 4, color: WGo.W},
-          {x: 9, y: 4, color: WGo.W},
-          {x: 10, y: 4, color: WGo.W},
-          {x: 6, y: 5, color: WGo.W},
-          {x: 11, y: 5, color: WGo.W},
-          {x: 12, y: 5, color: WGo.W},
-
-          //top black
-          {x: 6, y: 6, color: WGo.B},
-          {x: 7, y: 6, color: WGo.B},
-          {x: 8, y: 6, color: WGo.B},
-          {x: 9, y: 6, color: WGo.B},
-          {x: 10, y: 6, color: WGo.B},
-          {x: 11, y: 6, color: WGo.B},
-          {x: 12, y: 6, color: WGo.B},
-
-          //b side
-          {y: 7, x: 6, color: WGo.B},
-          {y: 8, x: 6, color: WGo.B},
-          {y: 9, x: 6, color: WGo.B},
-
-          //b side
-          {y: 7, x: 12, color: WGo.B},
-          {y: 8, x: 12, color: WGo.B},
-          {y: 9, x: 12, color: WGo.B},
-
-          //w side
-          {y: 6, x: 5, color: WGo.W},
-          {y: 7, x: 5, color: WGo.W},
-          {y: 8, x: 5, color: WGo.W},
-          {y: 9, x: 5, color: WGo.W},
-          {y: 10, x: 5, color: WGo.W},
-
-          //w side
-          {y: 6, x: 13, color: WGo.W},
-          {y: 7, x: 13, color: WGo.W},
-          {y: 8, x: 13, color: WGo.W},
-          {y: 9, x: 13, color: WGo.W},
-          {y: 10, x: 13, color: WGo.W},
-
-          //bottom black
-          {x: 6, y: 10, color: WGo.B},
-          {x: 7, y: 10, color: WGo.B},
-          {x: 8, y: 10, color: WGo.B},
-          {x: 9, y: 10, color: WGo.B},
-          {x: 10, y: 10, color: WGo.B},
-          {x: 11, y: 10, color: WGo.B},
-          {x: 12, y: 10, color: WGo.B},
-
-          //bottom white
-          {x: 6, y: 11, color: WGo.W},
-          {x: 7, y: 11, color: WGo.W},
-          {x: 8, y: 11, color: WGo.W},
-          {x: 9, y: 11, color: WGo.W},
-          {x: 10, y: 11, color: WGo.W},
-          {x: 11, y: 11, color: WGo.W},
-          {x: 12, y: 11, color: WGo.W},
-
-          //inside white top
-          {x: 7, y: 7, color: WGo.W},
-          {x: 8, y: 7, color: WGo.W},
-          {x: 9, y: 7, color: WGo.W},
-          {x: 10, y: 7, color: WGo.W},
-          {x: 11, y: 7, color: WGo.W},
-
-          //inside white top
-          {x: 7, y: 9, color: WGo.W},
-          {x: 8, y: 9, color: WGo.W},
-          {x: 9, y: 9, color: WGo.W},
-          {x: 10, y: 9, color: WGo.W},
-          {x: 11, y: 9, color: WGo.W},
-
-          //inside white sides
-          {x: 11, y: 8, color: WGo.W},
-          {x: 7, y: 8, color: WGo.W},
-        ]
-      }
-    ];
-
-    //shift lvl around the board
+    //get levels and shift them around
+    this.levels = Levels;
     this.shiftLevels();
+
   }
 
   Game.prototype.shiftLevels = function() {
