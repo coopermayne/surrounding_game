@@ -1,6 +1,5 @@
 app.factory('Board', function() {
   var Board = function(config) {
-
     /*store all objects on board*/
     this.objects = new WGo.Position(config.size)
 
@@ -9,21 +8,21 @@ app.factory('Board', function() {
     this.listener = null;
     this._listener = null;
 
-    /*attach to element and make sure it dynamically sizes to div*/
+    //rendering settings
     this.w = 1000;
     this.h = 1000;
     this.size = config.size;  
     this.el = config.element;
     this.line_width=0.5;
 
-    this.createCanvas();
-    this.drawLines();
+    this.drawBoard();
   }
 
-  Board.prototype.createCanvas = function() {
+  Board.prototype.drawBoard = function() {
     this.paper = new Raphael(this.el);
     this.paper.setViewBox(0,0,this.w,this.h,true);
     this.paper.setSize('100%', '100%');
+    this.drawLines();
   }
 
   Board.prototype.drawLines = function() {
@@ -45,25 +44,24 @@ app.factory('Board', function() {
     }
   }
 
-  Board.prototype.addObject = function(params) {
-    /*pararms = {x: xval, y: yval, type: 'white'}*/
+  Board.prototype.addObject = function(x,y,c) {
     var color;
-    if (params.type == 'black') {
-      var color = 'black';
-    } else if (params.type == 'white'){
-      var color = 'white';
+    if (c==WGo.B) {
+      color = 'black';
+    } else if (c==WGo.W){
+      color = 'white';
     }
     var radius = this.w/(this.size + 2);
     radius = radius/2
-    var obj = this.paper.circle(this.getX(params.x), this.getY(params.y), radius).attr({'stroke-width':this.line_width,fill: color});
+    var obj = this.paper.circle(this.getX(x), this.getY(y), radius).attr({'stroke-width':this.line_width,fill: color});
 
 
-    this.objects.set(params.x, params.y, obj);
-
+    //store it
+    this.objects.set(x, y, obj);
   }
 
   Board.prototype.removeAllObjects = function() {
-    angular.forEach(this.objects.schema, function(object, key) {
+    _.each(this.objects.schema, function(object, key) {
       if(object) object.remove();
     })
     this.objects.clear();
@@ -83,7 +81,8 @@ app.factory('Board', function() {
       type: type,
       callback: callback,
       handleEvent: function(e) {
-        var coo = getMousePos.call(_this, e);
+        var coo = findCoordinate.call(_this, e);
+        //run the call back with coordinates as parameters
         callback(coo.x, coo.y, e);
       }
     }
@@ -114,7 +113,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
   var Game = function(config) {
     //instantiate a new game
 
-    this.current_lvl = 0;
+    this.current_lvl = 9;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -127,12 +126,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 
     this.levels = [
       {
-        id:0,
-        type: 'play',
-        description: 'capture one stone',
-        center_coord: {x:9, y:5},
-        init_moves: [
-        ]
+      id:0,
+      type: 'play',
+      description: 'capture one stone',
+      center_coord: {x:9, y:5},
+      init_moves: [
+      ]
       },
       {
         id:1,
@@ -445,11 +444,11 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
           //inside white sides
           {x: 11, y: 8, color: WGo.W},
           {x: 7, y: 8, color: WGo.W},
-]
+        ]
       }
     ];
 
-    //shift lvl over 10 places for each lvl
+    //shift lvl around the board
     this.shiftLevels();
   }
 
@@ -458,57 +457,51 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     var shift = 15
     var vertical_padding = 1;
     var h_padding = 5;
-    angular.forEach(this.levels, function(value, key) {
+    _.each(this.levels, function(value, key) {
       var row = Math.floor(key/3);
       var col = key%3;
 
+      //make an s pattern in the layout
       if (row == 1 || row == 3) {
         col = 2-col;
       }
 
-      if(value.target_group){
-        value.target_group.x += col * shift + h_padding
-        value.target_group.y += row * shift + vertical_padding;
-      }
-      value.center_coord.x += col * shift + h_padding
-      value.center_coord.y += row * shift + vertical_padding;
-      if(value.vital_point) {
-        value.vital_point.x += col * shift + h_padding
-        value.vital_point.y += row * shift + vertical_padding;
+      var shift_point = function(point) {
+        point.x += col * shift + h_padding
+        point.y += row * shift + vertical_padding;
       }
 
-      angular.forEach(value.init_moves, function(stone, k) {
-        stone.x +=  col  * shift + h_padding;
-        stone.y +=  row * shift + vertical_padding;
+      shift_point(value.center_coord);
+      if(value.target_group) shift_point(value.target_group); 
+      if(value.vital_point) shift_point(value.vital_point);
+
+      _.each(value.init_moves, function(stone, k) {
+        shift_point(stone);
       })
     })
   }
 
   Game.prototype.getProblemCenter = function() {
-    var stones = this.getCurrentLevel().init_moves;
+    var stones = this.currentLvl().init_moves;
     //return average x,y coord for points in problem
-    var res = {}
-    res.x = {min: null, max: null}
-    res.y = {min: null, max: null}
-    angular.forEach(stones, function(stone, k) {
-      res.x.max = res.x.max||stone.x
-      res.x.min = res.x.min||stone.x
-      if (stone.x<res.x.min) { res.x.min = stone.x }
-      if (stone.x>res.x.max) { res.x.max = stone.x }
-      res.y.max = res.y.max||stone.y
-      res.y.min = res.y.min||stone.y
-      if (stone.y<res.y.min) { res.y.min = stone.y }
-      if (stone.y>res.y.max) { res.y.max = stone.y }
+    var coords = {};
+    coords.x = [];
+    coords.y = [];
+    _.each(stones, function(stone, k) {
+      coords.x.push(stone.x);
+      coords.y.push(stone.y);
     });
 
-    var rx = (res.x.min+res.x.max)/2;
-    var ry = (res.y.min+res.y.max)/2;
+    var rx = ( _.min(coords.x) + _.max(coords.x) )/2;
+    var ry = ( _.min(coords.y) + _.max(coords.y) )/2;
 
-    if (this.getCurrentLevel().id==0) {
-      var zz = this.getCurrentLevel().center_coord
-      var rx = zz.x;
-      var ry = zz.y
+    //exception for problem 0
+    if (this.currentLvl().id==0) {
+      var cc = this.currentLvl().center_coord
+      var rx = cc.x;
+      var ry = cc.y
     }
+
     var px = this.board.getX(rx);
     var py = this.board.getY(ry);
 
@@ -531,25 +524,17 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     var schema = this.game.position.schema;
 
     for (var i = 0, len = schema.length; i < len; i++) {
-      if (schema[i] == 1) {
-        this.board.addObject({
-          x: this.helpers.idxToCoord(i, this.board.size).x,
-          y: this.helpers.idxToCoord(i, this.board.size).y,
-          type: 'black'
-        })
-      } else if (schema[i]==-1){
-        this.board.addObject({
-          x: this.helpers.idxToCoord(i, this.board.size).x,
-          y: this.helpers.idxToCoord(i, this.board.size).y,
-          type: 'white'
-        })
-      } else {
+      var coord = this.helpers.idxToCoord(i, this.board.size);
+      var color = schema[i];
 
-      }
+      if(color==0) continue;
+
+      else this.board.addObject(coord.x, coord.y, color)
+
     }
   }
 
-  Game.prototype.getCurrentLevel = function() {
+  Game.prototype.currentLvl = function() {
     //returns the level object with all info for current lvl
     return this.levels[this.current_lvl]
   }
@@ -564,7 +549,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     var self = this
 
     this.board.listener = function(x,y) {
-      //for one player problems
       self.clickListener(x,y);
     }
 
@@ -572,82 +556,70 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
   }
 
   Game.prototype.play = function(x,y,c) {
-    if (c==WGo.B) {
-      var type = 'black'
-    } else {
-      var type = 'white'
-    }
     //handle invalid moves
     if (!this.game.isValid(x,y,c)) {
-      console.log('invalid');
       return false
     }
 
     var caps = this.game.play(x,y,c)
-    this.board.addObject({ x:x,y:y, type:type });
+    this.board.addObject(x,y,c);
 
+    //remove captures
     var _this = this
     _.each(caps, function(cap,index) {
       _this.board.removeObject(cap)
     })
 
+    return true
+
     //play sound
-    var sound = new Howl({
-      urls: ['play.wav'],
-      volume: 0.1
-    }).play();
+    //var sound = new Howl({
+      //urls: ['play.wav'],
+      //volume: 0.1
+    //}).play();
   }
 
-  Game.prototype.beat_level = function() {
+  Game.prototype.beat_lvl = function() {
     //lvl 0 
-    if (this.getCurrentLevel().id==0) {
-      this.current_lvl +=1
-      this.board.removeEventListener("click", board.listener);
-      //
-      return true
-    }
+    if (this.currentLvl().id==0) return true;
 
     //lvl 1-10
-
-    var target_group = this.getCurrentLevel().target_group;
-    //if player captured the target group they win lvl
-    if (this.game.getStone(target_group.x, target_group.y) == 0) {
-      this.board.removeEventListener("click", this.board.listener);
-      //go to next lvl
-      this.current_lvl += 1;
-
-      return true
-    } else {
-      return false;
-    }
+    var target_group = this.currentLvl().target_group;
+    //check if player captured the target group
+    return (this.game.getStone(target_group.x, target_group.y) == 0) 
   }
 
   Game.prototype.clickListener= function(x,y,z) {
-
-    var board = this.board;
-    var game = this.game;
-
     //play and remove any captured stones from the board
-    this.play(x,y,WGo.W);
+    var res = this.play(x,y,WGo.W);
+
+    //if its an invalid move just skip the rest of this script
+    if (!res) return;
 
     //check if the move won
-    if (this.beat_level()) {
-      console.log('BROADCAST: game won');
+    if (this.beat_lvl()) {
+
+      this.current_lvl += 1;
+      this.board.removeEventListener("click", this.board.listener);
+
+      //tell scope player won
       rootScope.$broadcast('win');
-    } else if (this.getCurrentLevel().type == 'dynamic') {
+      return;
+    } 
+    
+    if (this.currentLvl().type == 'dynamic') {
       //if its a problem that needs and answer...
       //prevent further moves and tell scope whats happening 
 
       //store for reattachment
-      board._listener = board.listener;
-      board.removeEventListener("click", board.listener);
+      this.board._listener = this.board.listener;
+      this.board.removeEventListener("click", this.board.listener);
 
       console.log('BROADCAST: AI turn');
       rootScope.$broadcast('ai_turn');
     }
   }
 
-  //TODO important - this function is not working correctly!!
   Game.prototype.getLiberties = function(x,y,color) {
     //recursive function -- find group and liberties-- 
     var self = this
@@ -695,11 +667,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 
   Game.prototype.aiRespond = function() {
     //make a smart move and put event listener back on
+    var cl = this.currentLvl()
 
     //logic for problem 9 and 10
-    if (this.getCurrentLevel().vital_point) {
-      var cl = this.getCurrentLevel();
-      
+    if (cl.vital_point) {
       //TODO cleaner logic for lvls 9 and 10
       if (this.game.isValid(cl.vital_point.x, cl.vital_point.y, WGo.B)) {
       //if vital point hasn't been played play it...
@@ -729,32 +700,26 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
           }
         }
       }
-
-      //reattach listener
-      this.board.addEventListener('click', this.board._listener);
-
-      //don't keep playing....
-      return;
-    }
-    if (this.getCurrentLevel().vital_point) {
-      this.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
     } else {
+      //if there is no vital point
       var best_move = this.find_best_move();
       this.play(best_move.x,best_move.y, WGo.B);
+
     }
 
     //reattach listener
     this.board.addEventListener('click', this.board._listener);
+
   }
 
   Game.prototype.find_best_move = function() {
     var self = this
-    var group = this.getCurrentLevel().target_group;
+    var group = this.currentLvl().target_group;
 
     var libs = this.getLiberties(group.x,group.y)
     //find the best liberty to play on...
     var potential_moves = [];
-    angular.forEach(libs, function(lib) {
+    _.each(libs, function(lib) {
       //play here and examine group... record how many libs you have...
       var caps = self.game.play(lib.x, lib.y, WGo.B);
       var libs_n = self.getLiberties(group.x, group.y);
@@ -762,7 +727,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 
       //then remove the stone
       self.game.removeStone(lib.x, lib.y);
-      angular.forEach(caps, function(cap) {
+      _.each(caps, function(cap) {
         self.game.addStone(cap.x, cap.y, WGo.W)
       })
     });
@@ -778,7 +743,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     return best_move;
   }
 
-  Game.prototype.nextProblem = function() {
+  Game.prototype.nextProblem= function() {
     //set up listeners for next problem
     this.setUpListener();
   }
@@ -793,9 +758,9 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     //this.clearListener();
 
     //get array of initial moves for problem
-    var init_moves = this.getCurrentLevel().init_moves;
-    angular.forEach(this.levels, function(value, key) {
-      angular.forEach(value.init_moves, function(stone, k) {
+    var init_moves = this.currentLvl().init_moves;
+    _.each(this.levels, function(value, key) {
+      _.each(value.init_moves, function(stone, k) {
         //sync game position with pattern for problem
         game.play(stone.x,stone.y,stone.color)
       })
@@ -816,7 +781,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
 }]);
 
 
-var getMousePos= function(e) {
+var findCoordinate= function(e) {
   var coo = {};
   var el = $(this.el)
 

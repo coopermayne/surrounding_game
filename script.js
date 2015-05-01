@@ -51,6 +51,8 @@ app.controller('main',
   })
 
   scope.$on('win', function(event, args) {
+
+
     var time = 1000;
 
     //play win sound on first
