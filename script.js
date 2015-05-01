@@ -88,6 +88,4 @@ app.controller('main',
 
   //helper functions
   scope.getNumber = function(num) { return new Array(num); }
-
-
 }]);

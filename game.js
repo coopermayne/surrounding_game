@@ -455,7 +455,7 @@ app.factory('Levels', function() {
 app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeout, rootScope, Board, Levels) {
   var Game = function(config) {
     //instantiate a new game
-    this.current_lvl = 9;
+    this.current_lvl = 0;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -560,7 +560,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
   }
 
   Game.prototype.setUpListener = function() {
-    var self = this
+    var self = this;
 
     this.board.listener = function(x,y) {
       self.clickListener(x,y);
@@ -614,6 +614,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     if (this.beat_lvl()) {
 
       this.current_lvl += 1;
+      this.board.removeEventListener("click", this.board.listener);
 
       //tell scope player won
       rootScope.$broadcast('win');
@@ -624,12 +625,11 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
       //store for reattachment
       this.board._listener = this.board.listener;
+      this.board.removeEventListener("click", this.board.listener);
 
-      console.log('BROADCAST: AI turn');
       rootScope.$broadcast('ai_turn');
     }
 
-    this.board.removeEventListener("click", this.board.listener);
   }
 
   Game.prototype.getLiberties = function(x,y,color) {
