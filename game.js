@@ -83,7 +83,7 @@ app.factory('Board', function() {
       type: type,
       callback: callback,
       handleEvent: function(e) {
-        var coo = findCoordinate.call(_this, e);
+        var coo = _this.findCoordinate.call(_this, e);
         //run the call back with coordinates as parameters
         callback(coo.x, coo.y, e);
       }
@@ -93,6 +93,7 @@ app.factory('Board', function() {
   }
 
   Board.prototype.removeEventListener = function() {
+    //remove current listener
     this.el.removeEventListener(this.l.type, this.l, true);
   }
 
@@ -106,6 +107,20 @@ app.factory('Board', function() {
     var gap = this.h/(this.size+1)
     var row = gap*(y+1);
     return row
+  }
+
+  Board.prototype.findCoordinate= function(e) {
+    var coo = {};
+    var el = $(this.el)
+
+    var off_x = e.offsetX;
+    var off_y = e.offsetY;
+
+    coo.x = Math.round( (off_x/el.width()) * ( this.size + 1 )) -1;
+    coo.y = Math.round( (off_y/el.height()) * ( this.size + 1 )) -1;
+    coo.e = e;
+
+    return coo;
   }
 
   return Board;
@@ -454,7 +469,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     //get levels and shift them around
     this.levels = Levels;
     this.shiftLevels();
-
   }
 
   Game.prototype.shiftLevels = function() {
@@ -513,14 +527,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     return {x:px, y:py};
   }
 
-  Game.prototype.helpers = {
-    idxToCoord: function(index, size) {
-      var x = Math.floor(index/size);
-      var y = index%size;
-      return {
-        x: x,
-        y: y
-      }
+  Game.prototype.idxToCoord = function(index, size) {
+    var x = Math.floor(index/size);
+    var y = index%size;
+    return {
+      x: x,
+      y: y
     }
   }
 
@@ -529,7 +541,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     var schema = this.game.position.schema;
 
     _.each(schema, function(color, i) {
-      var coord = this.helpers.idxToCoord(i, this.board.size);
+      var coord = this.idxToCoord(i, this.board.size);
 
       this.board.addObject(coord.x, coord.y, color)
 
@@ -575,10 +587,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     return true
 
     //play sound
-    //var sound = new Howl({
-      //urls: ['play.wav'],
-      //volume: 0.1
-    //}).play();
+    var sound = new Howl({
+      urls: ['play.wav'],
+      volume: 0.1
+    }).play();
   }
 
   Game.prototype.beat_lvl = function() {
@@ -618,7 +630,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     }
 
     this.board.removeEventListener("click", this.board.listener);
-
   }
 
   Game.prototype.getLiberties = function(x,y,color) {
@@ -710,7 +721,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
     //reattach listener
     this.board.addEventListener('click', this.board._listener);
-
   }
 
   Game.prototype.find_best_move = function() {
@@ -742,11 +752,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     best_move.x = potential_moves[0].move.x;
     best_move.y = potential_moves[0].move.y;
     return best_move;
-  }
-
-  Game.prototype.nextProblem= function() {
-    //set up listeners for next problem
-    this.setUpListener();
   }
 
   Game.prototype.setUpProblems = function() {
@@ -782,16 +787,3 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 }]);
 
 
-var findCoordinate= function(e) {
-  var coo = {};
-  var el = $(this.el)
-
-  var off_x = e.offsetX;
-  var off_y = e.offsetY;
-
-  coo.x = Math.round( (off_x/el.width()) * ( this.size + 1 )) -1;
-  coo.y = Math.round( (off_y/el.height()) * ( this.size + 1 )) -1;
-  coo.e = e;
-
-  return coo;
-}

@@ -67,7 +67,7 @@ app.controller('main',
     }
 
     timeout( function() {
-      scope.game.nextProblem();
+      scope.game.setUpListener();
       scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
       scope.current_lvl = scope.game.current_lvl;
 
