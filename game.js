@@ -31,7 +31,7 @@ app.factory('Board', function() {
     var left_col = this.getX(0);
     var right_col = this.getX(this.size-1)
 
-    for (var i = 0, len = this.size; i < len; i++) {
+    _(this.size).times( function(i) {
       var col_coord = this.getX(i)
       var vpath = "M "+ col_coord + " " + top_row +" l 0 " + ( bottom_row - top_row );
       var line_v = this.paper.path(vpath);
@@ -41,11 +41,13 @@ app.factory('Board', function() {
       var tpath = "M "+ left_col + " " + row_coord +" l " + ( right_col - left_col ) + " 0";
       var line_h = this.paper.path(tpath);
       line_h.attr({'stroke-width': this.line_width})
-    }
+    },this);
   }
 
   Board.prototype.addObject = function(x,y,c) {
     var color;
+    if ( c==0 ) return;
+
     if (c==WGo.B) {
       color = 'black';
     } else if (c==WGo.W){
@@ -523,15 +525,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     this.board.removeAllObjects();
     var schema = this.game.position.schema;
 
-    for (var i = 0, len = schema.length; i < len; i++) {
+    _.each(schema, function(color, i) {
       var coord = this.helpers.idxToCoord(i, this.board.size);
-      var color = schema[i];
 
-      if(color==0) continue;
+      this.board.addObject(coord.x, coord.y, color)
 
-      else this.board.addObject(coord.x, coord.y, color)
-
-    }
+    }, this)
   }
 
   Game.prototype.currentLvl = function() {
@@ -600,24 +599,23 @@ app.factory('Game', ['$timeout', '$rootScope','Board', function(timeout, rootSco
     if (this.beat_lvl()) {
 
       this.current_lvl += 1;
-      this.board.removeEventListener("click", this.board.listener);
 
       //tell scope player won
       rootScope.$broadcast('win');
-      return;
-    } 
-    
-    if (this.currentLvl().type == 'dynamic') {
+
+    } else if (this.currentLvl().type == 'dynamic') {
       //if its a problem that needs and answer...
       //prevent further moves and tell scope whats happening 
 
       //store for reattachment
       this.board._listener = this.board.listener;
-      this.board.removeEventListener("click", this.board.listener);
 
       console.log('BROADCAST: AI turn');
       rootScope.$broadcast('ai_turn');
     }
+
+    this.board.removeEventListener("click", this.board.listener);
+
   }
 
   Game.prototype.getLiberties = function(x,y,color) {
