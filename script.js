@@ -51,8 +51,6 @@ app.controller('main',
   })
 
   scope.$on('win', function(event, args) {
-
-
     var time = 1000;
 
     //play win sound on first
@@ -63,12 +61,15 @@ app.controller('main',
           urls: ['win.wav'],
           volume: 1
         }).play();
-      }, 500 )
+      }, 200 )
     }
 
     timeout( function() {
       scope.game.setUpListener();
-      scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
+      var varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
+      $(".progress").animate({
+        width: varvar
+      }, 200)
       scope.current_lvl = scope.game.current_lvl;
 
       $(".board_cont").animate({ 

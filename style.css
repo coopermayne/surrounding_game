@@ -12,6 +12,7 @@ body {
 .progress {
   background: rgb(68,68,68);
   height: 7px;
+  width: 0px;
 }
 
 .status_bar {
