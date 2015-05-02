@@ -1,0 +1,14 @@
+{
+  "name": "jquery-ripples",
+  "homepage": "https://github.com/coopermayne/jquery.ripples",
+  "_release": "c5d95b279b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "c5d95b279b9f87d0ad26e4c49c7bd68d04040d55"
+  },
+  "_source": "git://github.com/coopermayne/jquery.ripples.git",
+  "_target": "*",
+  "_originalSource": "jquery-ripples",
+  "_direct": true
+}
