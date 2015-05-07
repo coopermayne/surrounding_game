@@ -1,4 +1,4 @@
-app.factory('Board', function() {
+app.factory('Board', ['$timeout', function(timeout) {
   var Board = function(config) {
     /*store all objects on board*/
     this.objects = new WGo.Position(config.size)
@@ -72,9 +72,12 @@ app.factory('Board', function() {
   Board.prototype.removeObject = function(params) {
     /*pararms = {x: xval, y: yval}*/
     //fade out captures
-    var obj = this.objects.get(params.x,params.y)
-    obj.animate({ opacity : 0 }, 750, function () { this.remove() });
-    this.objects.set(params.x,params.y,0);
+    var _this = this
+    timeout( function() {
+      var obj = _this.objects.get(params.x,params.y)
+      obj.animate({ opacity : 0 }, 750, function () { this.remove() });
+      _this.objects.set(params.x,params.y,0);
+    }, 1000)
   }
 
   Board.prototype.addEventListener = function(type, callback) {
@@ -124,7 +127,7 @@ app.factory('Board', function() {
   }
 
   return Board;
-});
+}]);
 
 app.factory('Levels', function() {
   return [
@@ -587,10 +590,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     return true
 
     //play sound
-    var sound = new Howl({
-      urls: ['play.wav'],
-      volume: 0.1
-    }).play();
+    //var sound = new Howl({
+      //urls: ['play.wav'],
+      //volume: 0.1
+    //}).play();
   }
 
   Game.prototype.beat_lvl = function() {
@@ -604,31 +607,45 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
   }
 
   Game.prototype.clickListener= function(x,y,z) {
-    //play and remove any captured stones from the board
-    var res = this.play(x,y,WGo.W);
 
-    //if its an invalid move just skip the rest of this script
-    if (!res) return;
+    var _this = this
 
-    //check if the move won
-    if (this.beat_lvl()) {
+    //as soon as they click disable event listeners
+    this.board._listener = this.board.listener;
+    this.board.removeEventListener("click", this.board.listener);
 
-      this.current_lvl += 1;
-      this.board.removeEventListener("click", this.board.listener);
+    timeout( function() {
 
-      //tell scope player won
-      rootScope.$broadcast('win');
+      //reattach listener
+      _this.board.addEventListener('click', _this.board._listener);
 
-    } else if (this.currentLvl().type == 'dynamic') {
-      //if its a problem that needs and answer...
-      //prevent further moves and tell scope whats happening 
+      //play and update board
+      var res = _this.play(x,y,WGo.W);
 
-      //store for reattachment
-      this.board._listener = this.board.listener;
-      this.board.removeEventListener("click", this.board.listener);
+      //if its an invalid move just skip the rest of this script
+      if (!res) return;
 
-      rootScope.$broadcast('ai_turn');
-    }
+      //check if the move won
+      if (_this.beat_lvl()) {
+
+        _this.current_lvl += 1;
+        _this.board.removeEventListener("click", _this.board.listener);
+
+        //tell scope player won
+        rootScope.$broadcast('win');
+
+      } else if (_this.currentLvl().type == 'dynamic') {
+        //if its a problem that needs and answer...
+        //prevent further moves and tell scope whats happening 
+
+        //store for reattachment
+        _this.board._listener = _this.board.listener;
+        _this.board.removeEventListener("click", _this.board.listener);
+
+        rootScope.$broadcast('ai_turn');
+      }
+
+    }, 150)
 
   }
 
@@ -785,5 +802,3 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
   return Game;
 }]);
-
-

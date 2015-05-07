@@ -51,18 +51,18 @@ app.controller('main',
   })
 
   scope.$on('win', function(event, args) {
-    var time = 1000;
+    var time = 4000;
 
     //play win sound on first
-    if (scope.game.current_lvl == 1) {
-      time = 4000;
-      timeout( function() {
-        var sound = new Howl({
-          urls: ['win.wav'],
-          volume: 1
-        }).play();
-      }, 200 )
-    }
+    //if (scope.game.current_lvl == 1) {
+      //time = 4000;
+      //timeout( function() {
+        //var sound = new Howl({
+          //urls: ['win.wav'],
+          //volume: 1
+        //}).play();
+      //}, 200 )
+    //}
 
     timeout( function() {
       scope.game.setUpListener();
