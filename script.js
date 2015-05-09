@@ -43,6 +43,7 @@ app.controller('main',
 
   scope.game.setUpProblems();
   scope.game.setUpListener();
+  $('#portal').hide();
 
   //dynamic sizing using javascript
   dynamic_sizing();
@@ -54,17 +55,37 @@ app.controller('main',
     var time = 4000;
 
     //play win sound on first
-    //if (scope.game.current_lvl == 1) {
-      //time = 4000;
-      //timeout( function() {
-        //var sound = new Howl({
-          //urls: ['win.wav'],
-          //volume: 1
-        //}).play();
-      //}, 200 )
-    //}
+    if (scope.game.current_lvl == 1) {
+      time = 4000;
+      timeout( function() {
+        var sound = new Howl({
+          urls: ['sounds/gong.wav'],
+          volume: 1
+        }).play();
+      }, 200 )
+    } else if (scope.game.current_lvl == 10) {
+      timeout( function() {
+        var sound = new Howl({
+          urls: ['sounds/win_game.wav'],
+          volume: 0.1
+        }).play();
+      }, 3000 )
+
+      //fade it in
+      timeout( function() {
+        $("#portal").show();
+        var sound = new Howl({
+          urls: ['sounds/portal.wav'],
+          volume: 0.1
+        }).play();
+        $("#portal").animate({
+          opacity: 0.7
+        }, 7000)
+      }, 7000 )
+    }
 
     timeout( function() {
+
       scope.game.setUpListener();
       var varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
       $(".progress").animate({

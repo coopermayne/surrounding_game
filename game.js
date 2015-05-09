@@ -73,11 +73,24 @@ app.factory('Board', ['$timeout', function(timeout) {
     /*pararms = {x: xval, y: yval}*/
     //fade out captures
     var _this = this
+
     timeout( function() {
       var obj = _this.objects.get(params.x,params.y)
+      var color = obj.attr('fill');
+      if (color == 'white') {
+        var sound = new Howl({
+          urls: ['sounds/capture.wav'],
+          volume: 0.7
+        }).play();
+      } else if (color =='black') {
+        var sound = new Howl({
+          urls: ['sounds/level_up.wav'],
+          volume: 0.06
+        }).play();
+      }
       obj.animate({ opacity : 0 }, 750, function () { this.remove() });
       _this.objects.set(params.x,params.y,0);
-    }, 1000)
+    }, 1500)
   }
 
   Board.prototype.addEventListener = function(type, callback) {
@@ -208,7 +221,7 @@ app.factory('Levels', function() {
     description: 'capture using ladder',
     init_moves: [
       //ladder breaker
-      {x: 10, y:5, color: WGo.W},
+      {x: 11, y:5, color: WGo.W},
 
       {x: 7, y: 6, color: WGo.W},
       {x: 7, y: 7, color: WGo.W},
@@ -228,41 +241,41 @@ app.factory('Levels', function() {
       {x: 8, y:8, color: WGo.W},
       {x: 9, y:8, color: WGo.W},
       {x: 8, y: 7, color: WGo.B},
-      {x: 10, y: 5, color: WGo.B},
+      {x: 11, y: 4, color: WGo.B},
     ]
   },
-  {
-    id:6,
-    type: 'static',
-    description: 'capture group with one eye',
-    center_coord: {x:9, y:5},
-    target_group: {x:9, y:5},
-    init_moves: [
-      {x: 9, y: 4, color: WGo.W},
-      {x: 8, y: 4, color: WGo.W},
-      {x: 10, y: 4, color: WGo.W},
-      {x: 9, y: 5, color: WGo.B},
-      {x: 8, y: 5, color: WGo.B},
-      {x: 10, y: 5, color: WGo.B},
-      {x: 8, y: 6, color: WGo.B},
-      {x: 10, y: 6, color: WGo.B},
-      {x: 9, y: 7, color: WGo.B},
-      {x: 8, y: 7, color: WGo.B},
-      {x: 10, y: 7, color: WGo.B},
-      {x: 9, y: 8, color: WGo.W},
-      {x: 8, y: 8, color: WGo.W},
-      {x: 10, y: 8, color: WGo.W},
+  //{
+    //id:6,
+    //type: 'static',
+    //description: 'capture group with one eye',
+    //center_coord: {x:9, y:5},
+    //target_group: {x:9, y:5},
+    //init_moves: [
+      //{x: 9, y: 4, color: WGo.W},
+      //{x: 8, y: 4, color: WGo.W},
+      //{x: 10, y: 4, color: WGo.W},
+      //{x: 9, y: 5, color: WGo.B},
+      //{x: 8, y: 5, color: WGo.B},
+      //{x: 10, y: 5, color: WGo.B},
+      //{x: 8, y: 6, color: WGo.B},
+      //{x: 10, y: 6, color: WGo.B},
+      //{x: 9, y: 7, color: WGo.B},
+      //{x: 8, y: 7, color: WGo.B},
+      //{x: 10, y: 7, color: WGo.B},
+      //{x: 9, y: 8, color: WGo.W},
+      //{x: 8, y: 8, color: WGo.W},
+      //{x: 10, y: 8, color: WGo.W},
 
 
-      {x: 7, y: 5, color: WGo.W},
-      {x: 7, y: 6, color: WGo.W},
-      {x: 7, y: 7, color: WGo.W},
+      //{x: 7, y: 5, color: WGo.W},
+      //{x: 7, y: 6, color: WGo.W},
+      //{x: 7, y: 7, color: WGo.W},
 
-      {x: 11, y: 5, color: WGo.W},
-      {x: 11, y: 6, color: WGo.W},
-      {x: 11, y: 7, color: WGo.W},
-    ]
-  },
+      //{x: 11, y: 5, color: WGo.W},
+      //{x: 11, y: 6, color: WGo.W},
+      //{x: 11, y: 7, color: WGo.W},
+    //]
+  //},
   {
     id:7,
     type: 'dynamic',
@@ -322,6 +335,12 @@ app.factory('Levels', function() {
       {x: 7, y: 7, color: WGo.B},
       {x: 8, y: 7, color: WGo.B},
       {x: 8, y: 8, color: WGo.B},
+
+      //tail
+      {x: 8, y: 9, color: WGo.B},
+      {x: 8, y: 10, color: WGo.B},
+      {x: 8, y: 11, color: WGo.B},
+      {x: 8, y: 12, color: WGo.B},
     ]
   },
   {
@@ -458,6 +477,8 @@ app.factory('Levels', function() {
 app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeout, rootScope, Board, Levels) {
   var Game = function(config) {
     //instantiate a new game
+
+    //current level
     this.current_lvl = 0;
 
     //make a new game object
@@ -518,7 +539,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     var ry = ( _.min(coords.y) + _.max(coords.y) )/2;
 
     //exception for problem 0
-    if (this.currentLvl().id==0) {
+    if (this.currentLvl().id==0 || this.currentLvl().id==8) {
       var cc = this.currentLvl().center_coord
       var rx = cc.x;
       var ry = cc.y
@@ -584,16 +605,25 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     //remove captures
     var _this = this
     _.each(caps, function(cap,index) {
+      //console.log();
+      //var color = _this.game.getStone(cap.x,cap.y)
+      //if (color == -1) {
+        //var sound = new Howl({
+          //urls: ['sounds/capture.wav'],
+          //volume: 0.1
+        //}).play();
+      //}
       _this.board.removeObject(cap)
     })
 
-    return true
 
     //play sound
-    //var sound = new Howl({
-      //urls: ['play.wav'],
-      //volume: 0.1
-    //}).play();
+    var sound = new Howl({
+      urls: ['sounds/play.wav'],
+      volume: 0.1
+    }).play();
+
+    return true
   }
 
   Game.prototype.beat_lvl = function() {
@@ -645,7 +675,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
         rootScope.$broadcast('ai_turn');
       }
 
-    }, 150)
+    }, 200)
 
   }
 
@@ -732,8 +762,8 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     } else {
       //if there is no vital point
       var best_move = this.find_best_move();
-      this.play(best_move.x,best_move.y, WGo.B);
-
+      var cap = this.play(best_move.x,best_move.y, WGo.B);
+      console.log(cap);
     }
 
     //reattach listener
@@ -795,6 +825,11 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
   Game.prototype.restart = function() {
     var self = this;
+
+    var sound = new Howl({
+      urls: ['sounds/restart.wav'],
+      volume: 1
+    }).play();
 
     //attach listeners
     this.setUpProblems();
