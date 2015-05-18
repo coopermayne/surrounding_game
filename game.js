@@ -78,19 +78,19 @@ app.factory('Board', ['$timeout', function(timeout) {
       var obj = _this.objects.get(params.x,params.y)
       var color = obj.attr('fill');
       if (color == 'white') {
-        var sound = new Howl({
-          urls: ['sounds/capture.wav'],
-          volume: 0.7
-        }).play();
+        //var sound = new Howl({
+          //urls: ['sounds/capture.wav'],
+          //volume: 0.7
+        //}).play();
       } else if (color =='black') {
-        var sound = new Howl({
-          urls: ['sounds/level_up.wav'],
-          volume: 0.06
-        }).play();
+        //var sound = new Howl({
+          //urls: ['sounds/level_up.wav'],
+          //volume: 0.06
+        //}).play();
       }
       obj.animate({ opacity : 0 }, 750, function () { this.remove() });
       _this.objects.set(params.x,params.y,0);
-    }, 1500)
+    }, 500)
   }
 
   Board.prototype.addEventListener = function(type, callback) {
@@ -479,7 +479,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     //instantiate a new game
 
     //current level
-    this.current_lvl = 0;
+    this.current_lvl = 9;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -605,7 +605,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     //remove captures
     var _this = this
     _.each(caps, function(cap,index) {
-      //console.log();
       //var color = _this.game.getStone(cap.x,cap.y)
       //if (color == -1) {
         //var sound = new Howl({
@@ -618,10 +617,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
 
     //play sound
-    var sound = new Howl({
-      urls: ['sounds/play.wav'],
-      volume: 0.1
-    }).play();
+    //var sound = new Howl({
+      //urls: ['sounds/play.wav'],
+      //volume: 0.1
+    //}).play();
 
     return true
   }
@@ -644,10 +643,11 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     this.board._listener = this.board.listener;
     this.board.removeEventListener("click", this.board.listener);
 
+    //play the stone
     timeout( function() {
 
       //reattach listener
-      _this.board.addEventListener('click', _this.board._listener);
+      //_this.board.addEventListener('click', _this.board._listener);
 
       //play and update board
       var res = _this.play(x,y,WGo.W);
@@ -675,7 +675,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
         rootScope.$broadcast('ai_turn');
       }
 
-    }, 200)
+    }, 100)
 
   }
 
@@ -760,14 +760,22 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
         }
       }
     } else {
+
       //if there is no vital point
       var best_move = this.find_best_move();
       var cap = this.play(best_move.x,best_move.y, WGo.B);
-      console.log(cap);
     }
 
-    //reattach listener
-    this.board.addEventListener('click', this.board._listener);
+    if (cap) {
+      var _this = this;
+      timeout( function() {
+        //reattach listener
+        _this.board.addEventListener('click', _this.board._listener);
+      },1500);
+    } else {
+      //reattach listener
+      this.board.addEventListener('click', this.board._listener);
+    }
   }
 
   Game.prototype.find_best_move = function() {
@@ -826,10 +834,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
   Game.prototype.restart = function() {
     var self = this;
 
-    var sound = new Howl({
-      urls: ['sounds/restart.wav'],
-      volume: 1
-    }).play();
+    //var sound = new Howl({
+      //urls: ['sounds/restart.wav'],
+      //volume: 1
+    //}).play();
 
     //attach listeners
     this.setUpProblems();
