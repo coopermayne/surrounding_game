@@ -62,12 +62,22 @@ app.factory('Board', ['$timeout', function(timeout) {
     this.objects.set(x, y, obj);
   }
 
-  Board.prototype.drawCircle = function() {
-    console.log(this.objects);
-    var center = {x:9, y:5}
-    var radius = 20;
-    var obj = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width,fill: 'black'})
+  Board.prototype.drawCircle = function(x,y) {
+    var center = {x:x, y:y}
+    var radius = ( this.w/(this.size + 2) )/2
+    var time = 3000;
+    var transform_n = "s15.0";
+
+    var obj1 = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width*10, opacity: 0.1})
+    obj1.blur(0.5);
+    obj1.animate({ transform: transform_n, opacity: 0}, time*(1),  "ease-out");
+
+    var obj2 = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width*10, opacity: 0.1})
+    obj2.blur(0.5);
+    obj2.animate({ transform: transform_n, opacity: 0}, time*(3/5),  "ease-out");
+
   }
+  
 
   Board.prototype.removeAllObjects = function() {
     _.each(this.objects.schema, function(object, key) {
@@ -668,6 +678,9 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
       //check if the move won
       if (_this.beat_lvl()) {
+
+        //scope.game.board.drawCircle();
+        if (_this.current_lvl == 0) _this.board.drawCircle(x,y);
 
         _this.current_lvl += 1;
         _this.board.removeEventListener("click", _this.board.listener);
