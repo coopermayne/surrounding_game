@@ -56,12 +56,12 @@ app.controller('main',
 
     //play win sound on first
     if (scope.game.current_lvl == 1) {
-      time = 4000;
+      scope.game.board.drawCircle();
       timeout( function() {
-        var sound = new Howl({
-          urls: ['sounds/gong.wav'],
-          volume: 1
-        }).play();
+        //var sound = new Howl({
+          //urls: ['sounds/gong.wav'],
+          //volume: 1
+        //}).play();
       }, 200 )
     } else if (scope.game.current_lvl == 10) {
       timeout( function() {

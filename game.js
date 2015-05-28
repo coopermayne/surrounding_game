@@ -62,6 +62,13 @@ app.factory('Board', ['$timeout', function(timeout) {
     this.objects.set(x, y, obj);
   }
 
+  Board.prototype.drawCircle = function() {
+    console.log(this.objects);
+    var center = {x:9, y:5}
+    var radius = 20;
+    var obj = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width,fill: 'black'})
+  }
+
   Board.prototype.removeAllObjects = function() {
     _.each(this.objects.schema, function(object, key) {
       if(object) object.remove();
@@ -129,8 +136,11 @@ app.factory('Board', ['$timeout', function(timeout) {
     var coo = {};
     var el = $(this.el)
 
-    var off_x = e.offsetX;
-    var off_y = e.offsetY;
+    var off_x = e.offsetX==undefined?e.layerX:e.offsetX;
+    var off_y = e.offsetY==undefined?e.layerY:e.offsetY;
+
+    //var off_x = e.offsetX;
+    //var off_y = e.offsetY;
 
     coo.x = Math.round( (off_x/el.width()) * ( this.size + 1 )) -1;
     coo.y = Math.round( (off_y/el.height()) * ( this.size + 1 )) -1;
@@ -479,7 +489,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     //instantiate a new game
 
     //current level
-    this.current_lvl = 9;
+    this.current_lvl = 0;
 
     //make a new game object
     this.game = new WGo.Game(62);
@@ -596,6 +606,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
   Game.prototype.play = function(x,y,c) {
     //handle invalid moves
     if (!this.game.isValid(x,y,c)) {
+      console.log('invalid move');
       return false
     }
 
