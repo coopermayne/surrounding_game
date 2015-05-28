@@ -68,14 +68,13 @@ app.factory('Board', ['$timeout', function(timeout) {
     var time = 3000;
     var transform_n = "s15.0";
 
-    var obj1 = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width*10, opacity: 0.1})
-    obj1.blur(0.5);
+    var obj1 = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width*10, opacity: 0.05})
+    //obj1.blur(0.5);
     obj1.animate({ transform: transform_n, opacity: 0}, time*(1),  "ease-out");
 
-    var obj2 = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width*10, opacity: 0.1})
-    obj2.blur(0.5);
+    var obj2 = this.paper.circle(this.getX(center.x), this.getY(center.y), radius).attr({'stroke-width':this.line_width*10, opacity: 0.05})
+    //obj2.blur(0.5);
     obj2.animate({ transform: transform_n, opacity: 0}, time*(3/5),  "ease-out");
-
   }
   
 
@@ -657,7 +656,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
   }
 
   Game.prototype.clickListener= function(x,y,z) {
-
     var _this = this
 
     //as soon as they click disable event listeners
@@ -668,7 +666,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     timeout( function() {
 
       //reattach listener
-      //_this.board.addEventListener('click', _this.board._listener);
+      _this.board.addEventListener('click', _this.board._listener);
 
       //play and update board
       var res = _this.play(x,y,WGo.W);
@@ -700,7 +698,6 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
       }
 
     }, 100)
-
   }
 
   Game.prototype.getLiberties = function(x,y,color) {
