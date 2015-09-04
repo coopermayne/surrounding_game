@@ -38,7 +38,7 @@ app.controller('main',
     element: document.getElementById("board"),
   });
 
-  scope.varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
+  scope.status_percent = scope.game.current_lvl/scope.game.levels.length*100 + "%";
   scope.current_lvl = scope.game.current_lvl;
 
   scope.game.setUpProblems();
@@ -54,7 +54,7 @@ app.controller('main',
   scope.$on('win', function(event, args) {
     var time = 4000;
 
-    //play win sound on first
+    //play win sound for first level
     if (scope.game.current_lvl == 1) {
       timeout( function() {
         //var sound = new Howl({
@@ -63,6 +63,7 @@ app.controller('main',
         //}).play();
       }, 0 )
     } else if (scope.game.current_lvl == 10) {
+    //play sound and show portal for last level
       timeout( function() {
         var sound = new Howl({
           urls: ['sounds/win_game.wav'],
@@ -70,7 +71,6 @@ app.controller('main',
         }).play();
       }, 3000 )
 
-      //fade it in
       timeout( function() {
         $("#portal").show();
         var sound = new Howl({
@@ -84,11 +84,10 @@ app.controller('main',
     }
 
     timeout( function() {
-
-      scope.game.setUpListener();
-      var varvar = scope.game.current_lvl/scope.game.levels.length*100 + "%";
+      scope.game.board.listener_on = true;
+      var status_percent = scope.game.current_lvl/scope.game.levels.length*100 + "%";
       $(".progress").animate({
-        width: varvar
+        width: status_percent
       }, 200)
       scope.current_lvl = scope.game.current_lvl;
 
