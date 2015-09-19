@@ -51,23 +51,28 @@ app.controller('main',
     dynamic_sizing();
   })
 
+  //reveal
+  $('#cover').fadeOut(100)
+
   scope.$on('win', function(event, args) {
-    var time = 4000;
+    var time = 3000;
 
     //play win sound on first
     if (scope.game.current_lvl == 1) {
-      time = 4000;
+      time = 3000;
       timeout( function() {
         var sound = new Howl({
           urls: ['sounds/gong.wav'],
-          volume: 0.8
+          volume: 0.4
         }).play();
       }, 200 )
     } else if (scope.game.current_lvl == 10) {
+      //last level -- portal time
+
       timeout( function() {
         var sound = new Howl({
-          urls: ['sounds/win_game.wav'],
-          volume: 0.1
+          urls: ['sounds/gong.wav'],
+          volume: 0.4
         }).play();
       }, 3000 )
 
@@ -78,10 +83,19 @@ app.controller('main',
           urls: ['sounds/portal.wav'],
           volume: 0.1
         }).play();
+        
+        $('#board').fadeOut(2000)
+
         $("#portal").animate({
-          opacity: 0.7
-        }, 7000)
-      }, 7000 )
+          opacity: 1
+        }, 5000, function() {
+          location.href = 'http://www.surroundinggamemovie.com/';
+        })
+
+        //$("video").delay(2000).fadeIn(2000, function() {
+          //$('#portal video').get(0).play()
+        //})
+      }, 3000 )
     }
 
     timeout( function() {

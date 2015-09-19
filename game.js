@@ -15,6 +15,8 @@ app.factory('Board', ['$timeout', function(timeout) {
     this.el = config.element;
     this.line_width=0.5;
 
+    this.removeObjectTime = 1000
+
     this.drawBoard();
   }
 
@@ -90,7 +92,7 @@ app.factory('Board', ['$timeout', function(timeout) {
       }
       obj.animate({ opacity : 0 }, 750, function () { this.remove() });
       _this.objects.set(params.x,params.y,0);
-    }, 1500)
+    }, _this.removeObjectTime)
   }
 
   Board.prototype.addEventListener = function(type, callback) {
@@ -606,13 +608,12 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     var _this = this
 
     if (!_.isEmpty(caps)) {
-      console.log(caps);
       timeout( function() {
         var sound = new Howl({
           urls: ['sounds/capture.wav'],
           volume: 0.5
         }).play();
-      }, 1500 )
+      }, this.board.removeObjectTime )
     }
 
     _.each(caps, function(cap,index) {

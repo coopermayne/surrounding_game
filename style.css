@@ -5,6 +5,21 @@ body {
   margin: 0 0;
 }
 
+#cover {
+  position:fixed;
+  padding:0;
+  margin:0;
+
+  z-index: 9999;
+
+  top:0;
+  left:0;
+
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+
 .progress_cont {
   border-bottom: 1px solid #cccccc;
 }
@@ -15,13 +30,13 @@ body {
   width: 0px;
 }
 
-.status_bar {
-  width: 100%;
-  margin: 10px 20px;
-  text-align: center;
-  font-family: sans-serif, sans-serif;
-  color: rgb(68,68,68);
-}
+/*.status_bar {*/
+  /*width: 100%;*/
+  /*margin: 10px 20px;*/
+  /*text-align: center;*/
+  /*font-family: sans-serif, sans-serif;*/
+  /*color: rgb(68,68,68);*/
+/*}*/
 
 .viewport {
   margin: 0 auto;
@@ -67,6 +82,13 @@ body {
   text-align: center;
   padding-bottom: 100px;
 }
+
+video {
+  height: 60%;
+  margin: 40px auto;
+  display: none;
+}
+
 #portal h2{
   padding-top: 247px;
   opacity: 1;

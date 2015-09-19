@@ -18,17 +18,30 @@
 </head>
 
 <body ng-app="surroundingGame" ng-controller="main">
+  <div id="cover"></div>
 
 <!--<div id="portal" ng-show="current_lvl==10">-->
 <div id="portal">
-  <h2>SOME KIND OF PORTAL</h2>
+  <video class="center" controls="controls" width="690" height="390">
+    <source src="https://s3.amazonaws.com/go_videos/Trailer2F.mp4" type="video/mp4" />
+    <source src="https://s3.amazonaws.com/go_videos/Trailer2F.webm" type="video/webm" />
+    <source src="https://s3.amazonaws.com/go_videos/Trailer2F.ogv" type="video/ogg" />
+    <object type="application/x-shockwave-flash" data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" width="690" height="390">
+      <param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />
+      <param name="allowFullScreen" value="true" />
+      <param name="wmode" value="transparent" />
+      <param name="flashVars" value="config={'playlist':['http%3A%2F%2Fwww.surroundinggamemovie.com%2Fstatic%2Fuploads%2Fimages%2FTrailerTitle.jpg',{'url':'https%3A%2F%2Fs3.amazonaws.com%2Fgo_videos%2FTrailer2F.mp4','autoPlay':false}]}" />
+      <img alt="The Surrounding Game Trailer" src="http://www.surroundinggamemovie.com/static/uploads/images/TrailerTitle.jpg" width="690" height="390" title="No video playback capabilities." />
+    </object>
+  </video>
 </div>
 
 <div class="progress_cont">
   <div class='progress'></div>
 </div>
 
-<h2 class="status_bar">Level: {{current_lvl}}</h1>
+<!--<h2 class="status_bar">Level: {{current_lvl}}</h1>-->
+<h2 class="status_bar"> &nbsp;</h1>
 
 <div class="viewport">
   <div class="fade">&nbsp</div>
@@ -36,7 +49,6 @@
     <div id="board"></div>
   </div>
 </div>
-
 
 <img id="restart_button" ng-click="game.restart()" src="svg/spinner11.svg"/>
 
