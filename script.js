@@ -60,7 +60,7 @@ app.controller('main',
       timeout( function() {
         var sound = new Howl({
           urls: ['sounds/gong.wav'],
-          volume: 1
+          volume: 0.8
         }).play();
       }, 200 )
     } else if (scope.game.current_lvl == 10) {

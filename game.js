@@ -78,15 +78,15 @@ app.factory('Board', ['$timeout', function(timeout) {
       var obj = _this.objects.get(params.x,params.y)
       var color = obj.attr('fill');
       if (color == 'white') {
-        var sound = new Howl({
-          urls: ['sounds/capture.wav'],
-          volume: 0.7
-        }).play();
+        //var sound = new Howl({
+          //urls: ['sounds/capture.wav'],
+          //volume: 0.7
+        //}).play();
       } else if (color =='black') {
-        var sound = new Howl({
-          urls: ['sounds/level_up.wav'],
-          volume: 0.06
-        }).play();
+        //var sound = new Howl({
+          //urls: ['sounds/capture.wav'],
+          //volume: 1
+        //}).play();
       }
       obj.animate({ opacity : 0 }, 750, function () { this.remove() });
       _this.objects.set(params.x,params.y,0);
@@ -604,15 +604,18 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
     //remove captures
     var _this = this
+
+    if (!_.isEmpty(caps)) {
+      console.log(caps);
+      timeout( function() {
+        var sound = new Howl({
+          urls: ['sounds/capture.wav'],
+          volume: 0.5
+        }).play();
+      }, 1500 )
+    }
+
     _.each(caps, function(cap,index) {
-      //console.log();
-      //var color = _this.game.getStone(cap.x,cap.y)
-      //if (color == -1) {
-        //var sound = new Howl({
-          //urls: ['sounds/capture.wav'],
-          //volume: 0.1
-        //}).play();
-      //}
       _this.board.removeObject(cap)
     })
 
@@ -620,7 +623,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     //play sound
     var sound = new Howl({
       urls: ['sounds/play.wav'],
-      volume: 0.1
+      volume: 1
     }).play();
 
     return true
