@@ -52,7 +52,7 @@ app.controller('main',
   })
 
   //reveal
-  $('#cover').fadeOut(100)
+  $('#cover').fadeOut(1500)
 
   scope.$on('win', function(event, args) {
     var time = 3000;
