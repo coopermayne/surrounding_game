@@ -279,7 +279,7 @@ app.factory('Levels', function() {
     //]
   //},
   {
-    id:7,
+    id:6,
     type: 'dynamic',
     description: 'capture group with big eye',
     center_coord: {x:8, y:6},
@@ -316,37 +316,37 @@ app.factory('Levels', function() {
       {x: 10, y: 4, color: WGo.W},
     ]
   },
-  {
-    id:8,
-    type: 'dynamic',
-    description: 'snapback',
-    center_coord: {x:8, y:6},
-    target_group: {x:9, y:5},
-    init_moves: [
-      {x: 8, y: 4, color: WGo.W},
-      {x: 9, y: 4, color: WGo.W},
-      {x: 6, y: 5, color: WGo.W},
-      {x: 7, y: 5, color: WGo.W},
-      {x: 9, y: 5, color: WGo.B},
-      {x: 8, y: 5, color: WGo.B},
-      {x: 10, y: 5, color: WGo.W},
-      {x: 10, y: 6, color: WGo.W},
-      {x: 9, y: 7, color: WGo.W},
+  //{
+    //id:8,
+    //type: 'dynamic',
+    //description: 'snapback',
+    //center_coord: {x:8, y:6},
+    //target_group: {x:9, y:5},
+    //init_moves: [
+      //{x: 8, y: 4, color: WGo.W},
+      //{x: 9, y: 4, color: WGo.W},
+      //{x: 6, y: 5, color: WGo.W},
+      //{x: 7, y: 5, color: WGo.W},
+      //{x: 9, y: 5, color: WGo.B},
+      //{x: 8, y: 5, color: WGo.B},
+      //{x: 10, y: 5, color: WGo.W},
+      //{x: 10, y: 6, color: WGo.W},
+      //{x: 9, y: 7, color: WGo.W},
 
-      {x: 7, y: 6, color: WGo.B},
-      {x: 7, y: 7, color: WGo.B},
-      {x: 8, y: 7, color: WGo.B},
-      {x: 8, y: 8, color: WGo.B},
+      //{x: 7, y: 6, color: WGo.B},
+      //{x: 7, y: 7, color: WGo.B},
+      //{x: 8, y: 7, color: WGo.B},
+      //{x: 8, y: 8, color: WGo.B},
 
-      //tail
-      {x: 8, y: 9, color: WGo.B},
-      {x: 8, y: 10, color: WGo.B},
-      {x: 8, y: 11, color: WGo.B},
-      {x: 8, y: 12, color: WGo.B},
-    ]
-  },
+      ////tail
+      //{x: 8, y: 9, color: WGo.B},
+      //{x: 8, y: 10, color: WGo.B},
+      //{x: 8, y: 11, color: WGo.B},
+      //{x: 8, y: 12, color: WGo.B},
+    //]
+  //},
   {
-    id:9,
+    id:7,
     type: 'dynamic',
     description: 'kill by playing vital point',
     center_coord: {x:7, y:7},
@@ -385,94 +385,94 @@ app.factory('Levels', function() {
       {x: 7, y: 5, color: WGo.W},
       {x: 8, y: 5, color: WGo.W},
     ]
-  },
-  {
-    id:10,
-    type: 'dynamic',
-    description: 'live by playing the vital point',
-    center_coord: {x:9, y:7},
-    target_group: {x:9, y:6},
-    vital_point: {x:9, y:8},
-    init_moves: [
-      //top white
-      {x: 7, y: 4, color: WGo.W},
-      {x: 8, y: 4, color: WGo.W},
-      {x: 9, y: 4, color: WGo.W},
-      {x: 10, y: 4, color: WGo.W},
-      {x: 6, y: 5, color: WGo.W},
-      {x: 11, y: 5, color: WGo.W},
-      {x: 12, y: 5, color: WGo.W},
-
-      //top black
-      {x: 6, y: 6, color: WGo.B},
-      {x: 7, y: 6, color: WGo.B},
-      {x: 8, y: 6, color: WGo.B},
-      {x: 9, y: 6, color: WGo.B},
-      {x: 10, y: 6, color: WGo.B},
-      {x: 11, y: 6, color: WGo.B},
-      {x: 12, y: 6, color: WGo.B},
-
-      //b side
-      {y: 7, x: 6, color: WGo.B},
-      {y: 8, x: 6, color: WGo.B},
-      {y: 9, x: 6, color: WGo.B},
-
-      //b side
-      {y: 7, x: 12, color: WGo.B},
-      {y: 8, x: 12, color: WGo.B},
-      {y: 9, x: 12, color: WGo.B},
-
-      //w side
-      {y: 6, x: 5, color: WGo.W},
-      {y: 7, x: 5, color: WGo.W},
-      {y: 8, x: 5, color: WGo.W},
-      {y: 9, x: 5, color: WGo.W},
-      {y: 10, x: 5, color: WGo.W},
-
-      //w side
-      {y: 6, x: 13, color: WGo.W},
-      {y: 7, x: 13, color: WGo.W},
-      {y: 8, x: 13, color: WGo.W},
-      {y: 9, x: 13, color: WGo.W},
-      {y: 10, x: 13, color: WGo.W},
-
-      //bottom black
-      {x: 6, y: 10, color: WGo.B},
-      {x: 7, y: 10, color: WGo.B},
-      {x: 8, y: 10, color: WGo.B},
-      {x: 9, y: 10, color: WGo.B},
-      {x: 10, y: 10, color: WGo.B},
-      {x: 11, y: 10, color: WGo.B},
-      {x: 12, y: 10, color: WGo.B},
-
-      //bottom white
-      {x: 6, y: 11, color: WGo.W},
-      {x: 7, y: 11, color: WGo.W},
-      {x: 8, y: 11, color: WGo.W},
-      {x: 9, y: 11, color: WGo.W},
-      {x: 10, y: 11, color: WGo.W},
-      {x: 11, y: 11, color: WGo.W},
-      {x: 12, y: 11, color: WGo.W},
-
-      //inside white top
-      {x: 7, y: 7, color: WGo.W},
-      {x: 8, y: 7, color: WGo.W},
-      {x: 9, y: 7, color: WGo.W},
-      {x: 10, y: 7, color: WGo.W},
-      {x: 11, y: 7, color: WGo.W},
-
-      //inside white top
-      {x: 7, y: 9, color: WGo.W},
-      {x: 8, y: 9, color: WGo.W},
-      {x: 9, y: 9, color: WGo.W},
-      {x: 10, y: 9, color: WGo.W},
-      {x: 11, y: 9, color: WGo.W},
-
-      //inside white sides
-      {x: 11, y: 8, color: WGo.W},
-      {x: 7, y: 8, color: WGo.W},
-    ]
   }
+  //{
+    //id:10,
+    //type: 'dynamic',
+    //description: 'live by playing the vital point',
+    //center_coord: {x:9, y:7},
+    //target_group: {x:9, y:6},
+    //vital_point: {x:9, y:8},
+    //init_moves: [
+      ////top white
+      //{x: 7, y: 4, color: WGo.W},
+      //{x: 8, y: 4, color: WGo.W},
+      //{x: 9, y: 4, color: WGo.W},
+      //{x: 10, y: 4, color: WGo.W},
+      //{x: 6, y: 5, color: WGo.W},
+      //{x: 11, y: 5, color: WGo.W},
+      //{x: 12, y: 5, color: WGo.W},
+
+      ////top black
+      //{x: 6, y: 6, color: WGo.B},
+      //{x: 7, y: 6, color: WGo.B},
+      //{x: 8, y: 6, color: WGo.B},
+      //{x: 9, y: 6, color: WGo.B},
+      //{x: 10, y: 6, color: WGo.B},
+      //{x: 11, y: 6, color: WGo.B},
+      //{x: 12, y: 6, color: WGo.B},
+
+      ////b side
+      //{y: 7, x: 6, color: WGo.B},
+      //{y: 8, x: 6, color: WGo.B},
+      //{y: 9, x: 6, color: WGo.B},
+
+      ////b side
+      //{y: 7, x: 12, color: WGo.B},
+      //{y: 8, x: 12, color: WGo.B},
+      //{y: 9, x: 12, color: WGo.B},
+
+      ////w side
+      //{y: 6, x: 5, color: WGo.W},
+      //{y: 7, x: 5, color: WGo.W},
+      //{y: 8, x: 5, color: WGo.W},
+      //{y: 9, x: 5, color: WGo.W},
+      //{y: 10, x: 5, color: WGo.W},
+
+      ////w side
+      //{y: 6, x: 13, color: WGo.W},
+      //{y: 7, x: 13, color: WGo.W},
+      //{y: 8, x: 13, color: WGo.W},
+      //{y: 9, x: 13, color: WGo.W},
+      //{y: 10, x: 13, color: WGo.W},
+
+      ////bottom black
+      //{x: 6, y: 10, color: WGo.B},
+      //{x: 7, y: 10, color: WGo.B},
+      //{x: 8, y: 10, color: WGo.B},
+      //{x: 9, y: 10, color: WGo.B},
+      //{x: 10, y: 10, color: WGo.B},
+      //{x: 11, y: 10, color: WGo.B},
+      //{x: 12, y: 10, color: WGo.B},
+
+      ////bottom white
+      //{x: 6, y: 11, color: WGo.W},
+      //{x: 7, y: 11, color: WGo.W},
+      //{x: 8, y: 11, color: WGo.W},
+      //{x: 9, y: 11, color: WGo.W},
+      //{x: 10, y: 11, color: WGo.W},
+      //{x: 11, y: 11, color: WGo.W},
+      //{x: 12, y: 11, color: WGo.W},
+
+      ////inside white top
+      //{x: 7, y: 7, color: WGo.W},
+      //{x: 8, y: 7, color: WGo.W},
+      //{x: 9, y: 7, color: WGo.W},
+      //{x: 10, y: 7, color: WGo.W},
+      //{x: 11, y: 7, color: WGo.W},
+
+      ////inside white top
+      //{x: 7, y: 9, color: WGo.W},
+      //{x: 8, y: 9, color: WGo.W},
+      //{x: 9, y: 9, color: WGo.W},
+      //{x: 10, y: 9, color: WGo.W},
+      //{x: 11, y: 9, color: WGo.W},
+
+      ////inside white sides
+      //{x: 11, y: 8, color: WGo.W},
+      //{x: 7, y: 8, color: WGo.W},
+    //]
+  //}
   ]
 })
 
@@ -740,7 +740,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
         this.play(cl.vital_point.x, cl.vital_point.y, WGo.B);
       } else {
         //if it has been... and its problem 9 -- capture white group
-        if (cl.id == 10) {
+        if (cl.id == 8) {
           if (this.game.isValid(cl.vital_point.x-1, cl.vital_point.y, WGo.B)) {
             this.play(cl.vital_point.x-1, cl.vital_point.y, WGo.B);
           } else if (this.game.isValid(cl.vital_point.x+1, cl.vital_point.y, WGo.B)) {
@@ -753,7 +753,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
           } else if (this.game.isValid(cl.vital_point.x, cl.vital_point.y+1, WGo.B)) {
             this.play(cl.vital_point.x, cl.vital_point.y+1, WGo.B);
           } 
-        } else if (cl.id == 9) {
+        } else if (cl.id == 7) {
         //if it has been and its problem 8
           var l = this.getLiberties(cl.target_group.x, cl.target_group.y)
           if (this.game.getStone(cl.target_group.x,cl.target_group.y) == 1) {

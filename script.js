@@ -56,9 +56,10 @@ app.controller('main',
 
   scope.$on('win', function(event, args) {
     var time = 3000;
+    console.log(scope.game.current_lvl);
 
     //play win sound on first
-    if (scope.game.current_lvl == 1) {
+    if (scope.game.current_lvl < 8) {
       time = 3000;
       timeout( function() {
         var sound = new Howl({
@@ -66,7 +67,7 @@ app.controller('main',
           volume: 0.4
         }).play();
       }, 200 )
-    } else if (scope.game.current_lvl == 10) {
+    } else if (scope.game.current_lvl == 8) {
       //last level -- portal time
 
       timeout( function() {
