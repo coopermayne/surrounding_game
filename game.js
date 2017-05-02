@@ -382,8 +382,10 @@ app.factory('Levels', function() {
       {x: 8, y: 6, color: WGo.B},
       {x: 9, y: 6, color: WGo.W},
 
+      {x: 6, y: 5, color: WGo.W},
       {x: 7, y: 5, color: WGo.W},
       {x: 8, y: 5, color: WGo.W},
+      {x: 9, y: 5, color: WGo.W},
     ]
   }
   //{
@@ -481,7 +483,7 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
     //instantiate a new game
 
     //current level
-    this.current_lvl = 0;
+    this.current_lvl = 7;
 
     //make a new game object
     this.game = new WGo.Game(62);
