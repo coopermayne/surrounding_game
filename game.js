@@ -609,10 +609,10 @@ app.factory('Game', ['$timeout', '$rootScope','Board', 'Levels', function(timeou
 
     if (!_.isEmpty(caps)) {
       timeout( function() {
-        var sound = new Howl({
-          urls: ['sounds/capture.wav'],
-          volume: 0.5
-        }).play();
+        //var sound = new Howl({
+          //urls: ['sounds/capture.wav'],
+          //volume: 0.5
+        //}).play();
       }, this.board.removeObjectTime )
     }
 
