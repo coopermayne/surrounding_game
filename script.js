@@ -66,7 +66,7 @@ app.controller('main',
           urls: ['sounds/gong.wav'],
           volume: 0.4
         }).play();
-      }, 200 )
+      }, 1800 )
     } else if (scope.game.current_lvl == 8) {
       //last level -- portal time
 
